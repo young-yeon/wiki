@@ -47,7 +47,7 @@ const update = (req, res) => {
           if (err) return res.status(500).end();
         });
       }
-      res.status(301).setHeader("location", "/w/" + title);
+      res.status(301).setHeader("location", "/w/" + querystring.escape(title));
       res.end();
     }
   );

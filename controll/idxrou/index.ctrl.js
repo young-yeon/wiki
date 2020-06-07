@@ -2,7 +2,7 @@ const WikiModel = require("../../models/wiki");
 const querystring = require("querystring");
 
 const idx = function (req, res, next) {
-  res.render("index", { title: "Hello, Wiki!" });
+  res.render("index", { title: "안녕, 고래!" });
 };
 
 const random = (req, res) => {
@@ -13,7 +13,7 @@ const random = (req, res) => {
       .exec((err, result) => {
         if (err) return res.status(500).end();
         res.status(301);
-        res.setHeader("location", "/w/" + result.title);
+        res.setHeader("location", "/w/" + querystring.escape(result.title));
         res.setHeader("Cache-Control", "no-cache");
         return res.end();
       });
