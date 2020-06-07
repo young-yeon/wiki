@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <%- include("../default/header"); %>
+  <body>
+    <label id="_title" style="display: none;"><%= title %></label>
+    <%- include("../default/nav"); %>
+    <div class="jumbotron">
+      <!-- Jumbotron -->
+      <div class="jumbotron text-center">
+        <!-- Title -->
+        <h2 class="card-title h2"><%= title %></h2>
+        <p class="blue-text my-4 font-weight-bold"><%= subtitle %></p>
+
+        <!-- Grid row -->
+        <div class="row d-flex justify-content-center">
+          <!-- Grid column -->
+          <div class="col-xl-7 pb-2">
+            <p class="card-text">
+              <%= data %>
+            </p>
+          </div>
+          <!-- Grid column -->
+        </div>
+        <!-- Grid row -->
+
+        <hr class="my-4" />
+
+        <div class="row d-flex justify-content-center">
+          <!-- Grid column -->
+          <div class="col-xl-7 pb-2">
+            <p class="card-text">
+              최종수정일 : <%= created %>
+            </p>
+          </div>
+          <!-- Grid column -->
+        </div>
+        <div class="pt-2">
+          <button
+            type="button"
+            class="btn btn-blue waves-effect"
+            onclick="edit()"
+          >
+            문서 수정하기
+          </button>
+        </div>
+        <!-- Grid row -->
+      </div>
+      <!-- Jumbotron -->
+    </div>
+    <%- include("../default/edit"); %> <%- include("../default/footer"); %>
+  </body>
+</html>
