@@ -6,18 +6,17 @@
     <%- include("../default/nav"); %>
     <div class="jumbotron">
       <!-- Jumbotron -->
-      <div class="jumbotron text-center">
+      <div class="jumbotron">
         <!-- Title -->
-        <h2 class="card-title h2"><%= title %></h2>
-        <p class="blue-text my-4 font-weight-bold"><%= subtitle %></p>
-
+        <div class="text-center">
+          <h2 class="card-title h2"><%= title %></h2>
+          <p class="blue-text my-4 font-weight-bold"><%= subtitle %></p>
+        </div>
         <!-- Grid row -->
         <div class="row d-flex justify-content-center">
           <!-- Grid column -->
           <div class="col-xl-7 pb-2">
-            <p class="card-text">
-              <%= data %>
-            </p>
+            <%- data %>
           </div>
           <!-- Grid column -->
         </div>
@@ -34,7 +33,7 @@
           </div>
           <!-- Grid column -->
         </div>
-        <div class="pt-2">
+        <div class="pt-2 text-right">
           <button
             type="button"
             class="btn btn-blue waves-effect"

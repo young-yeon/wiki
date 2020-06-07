@@ -1,8 +1,11 @@
 const WikiModel = require("../../models/wiki");
 const querystring = require("querystring");
+const MarkdownIt = require("markdown-it"),
+  md = new MarkdownIt();
 
 const redirect = (req, res, next) => {
   var query = req.query.q;
+  query = query.trim();
   if (!query) {
     res.status(301).setHeader("location", "/");
     res.end();
@@ -13,36 +16,23 @@ const redirect = (req, res, next) => {
   return res.end();
 };
 
-const random = (req, res) => {
-  var sample = WikiModel.aggregate(
-    [{ $sample: { size: 1 } }],
-    (err, result) => {
-      if (err) return res.status(500).end();
-      if (!result) return res.status(404).end();
-      console.log(result[0].title);
-      res.status(301).setHeader("location", "/w/" + result[0].title);
-      return res.end();
-    }
-  ).sample(1);
-};
-
 const search = (req, res) => {
   const title = req.params.title;
 
-  WikiModel.find({ title: title }, (err, result) => {
+  WikiModel.findOne({ title: title }, (err, result) => {
     if (err) return res.status(500).end();
-    if (!result.length) return res.render("wiki/empty", { title: title });
-    const subtitle = result[0].subtitle;
-    const data = result[0].data;
-    const created = result[0].created;
-    console.log(result);
+    if (!result) return res.render("wiki/empty", { title });
+    const subtitle = result.subtitle;
+    const data = md.render(result.data);
+    const created = result.created;
+    
     res.render("wiki/index", {
-      title: title,
-      subtitle: subtitle,
-      data: data,
-      created: created,
+      title,
+      subtitle,
+      data,
+      created,
     });
   });
 };
 
-module.exports = { redirect, search, random };
+module.exports = { redirect, search };
