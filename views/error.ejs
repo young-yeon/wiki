@@ -1,3 +1,18 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE html>
+<html>
+  <%- include("default/header"); %>
+  <body>
+    <%- include("default/nav"); %>
+    <div class="jumbotron text-center">
+      <h2 class="display-4"><%= error.status %></h2>
+      <p class="lead"><%= message %></p>
+      <a
+        class="btn btn-primary btn-lg"
+        href="https://developer.mozilla.org/ko/docs/Web/HTTP/Status"
+        role="button"
+        >Learn more</a
+      >
+    </div>
+    <%- include("default/footer"); %>
+  </body>
+</html>
