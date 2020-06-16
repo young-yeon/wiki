@@ -4,13 +4,10 @@ const querystring = require("querystring");
 const redirect = (req, res, next) => {
   var query = req.query.q;
   if (!query) {
-    res.status(301).setHeader("location", "/");
-    res.end();
+    return res.redirect("/");
   }
   query = querystring.escape(query);
-  res.status(301);
-  res.setHeader("location", "/e/" + query);
-  return res.end();
+  return res.redirect("/e/" + query);
 };
 
 const edit = (req, res) => {
@@ -43,12 +40,11 @@ const update = (req, res) => {
     (err, result) => {
       if (err) return res.status(500).end();
       if (!result) {
-        WikiModel.create({ title, subtitle, data }, (err, res) => {
+        WikiModel.create({ title, subtitle, data }, (err, _) => {
           if (err) return res.status(500).end();
         });
       }
-      res.status(301).setHeader("location", "/w/" + querystring.escape(title));
-      res.end();
+      res.redirect("/w/" + querystring.escape(title));
     }
   );
 };
