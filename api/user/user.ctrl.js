@@ -27,3 +27,5 @@ const assignAdmin = (req, res) => {
       })
     );
 };
+
+module.exports = { list, assignAdmin };
