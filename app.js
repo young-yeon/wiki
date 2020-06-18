@@ -6,7 +6,6 @@ var logger = require("morgan");
 var mongoose = require("mongoose");
 
 var controller = require("./controll");
-var api = require("./api");
 var favicon = require("express-favicon");
 require("dotenv").config();
 const secret = process.env.SECRET || "secret-key";
@@ -32,7 +31,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api", api);
 app.use("/", controller);
 
 app.use(function (req, res, next) {
