@@ -15,6 +15,10 @@ const WikiSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  level: {
+    type: Number,
+    default: 1,
+  },
   created: {
     type: Date,
     default: Date.now,
