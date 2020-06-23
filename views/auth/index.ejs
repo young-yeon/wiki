@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <%- include("../default/header"); %>
+  <body>
+    <div class="card">
+      <h5 class="card-header info-color white-text text-center py-4">
+        <strong>Sign in</strong>
+      </h5>
+      <div class="card-body px-lg-5 pt-0">
+        <form
+          id="login-form"
+          class="text-center"
+          style="color: #757575;"
+          action="/auth/login"
+          method="POST"
+        >
+          <div class="md-form">
+            <input type="email" id="user_id" class="form-control" />
+            <label for="user_id">E-mail</label>
+          </div>
+          <div class="md-form">
+            <input type="password" id="user_pwd" class="form-control" />
+            <label for="user_pwd">Password</label>
+          </div>
+
+          <div class="d-flex justify-content-around">
+            <!--
+            <div>
+              <a href="">Forgot password?</a>
+            </div>
+            -->
+          </div>
+          <input
+            id="login"
+            class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0"
+            type="button"
+            value="Sign in"
+          />
+          <p>
+            Not a member?
+            <a href="/auth/register">Register</a>
+          </p>
+        </form>
+      </div>
+    </div>
+    <%- include("../default/footer"); %>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $("#login").click(function () {
+          var action = $("#login-form").attr("action");
+          var form_data = {
+            user_id: $("#user_id").val(),
+            user_pwd: $("#user_pwd").val(),
+          };
+          $.ajax({
+            type: "POST",
+            url: action,
+            data: form_data,
+            success: function (response) {
+              if (response == "success") {
+                opener.location.reload();
+                window.close();
+              } else {
+                alert("로그인 정보가 없습니다.")
+              }
+            },
+          });
+          return false;
+        });
+      });
+    </script>
+  </body>
+</html>

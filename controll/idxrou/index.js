@@ -1,8 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var ctrl = require("./index.ctrl");
+require("dotenv").config();
 
-/* GET home page. */
 router.get("/", ctrl.idx);
 router.get("/random", ctrl.random);
 

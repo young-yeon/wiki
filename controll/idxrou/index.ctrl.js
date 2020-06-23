@@ -2,7 +2,11 @@ const WikiModel = require("../../models/wiki");
 const querystring = require("querystring");
 
 const idx = function (req, res, next) {
-  res.render("index", { title: "안녕, 고래!" });
+  const nickname = req.session.nickname;
+  res.render("index", {
+    title: "안녕, 고래!",
+    nickname,
+  });
 };
 
 const random = (req, res) => {

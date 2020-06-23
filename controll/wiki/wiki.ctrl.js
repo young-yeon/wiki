@@ -1,6 +1,6 @@
 const WikiModel = require("../../models/wiki");
 const querystring = require("querystring");
-var marked = require('marked');
+var marked = require("marked");
 
 const redirect = (req, res, next) => {
   var query = req.query.q;
@@ -25,12 +25,14 @@ const search = (req, res) => {
     const subtitle = result.subtitle;
     const data = marked(result.data);
     const created = result.created;
+    const nickname = req.session.nickname;
 
     res.render("wiki/index", {
       title,
       subtitle,
       data,
       created,
+      nickname,
     });
   });
 };

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <%- include("../default/header"); %>
+  <body>
+    <!-- Default form register -->
+    <form
+      id="register-form"
+      class="text-center border border-light p-5"
+      action="/auth/register"
+      method="POST"
+    >
+      <p class="h4 mb-4">Sign up</p>
+      <!-- nickname -->
+      <input
+        type="text"
+        id="user_nickname"
+        class="form-control mb-4"
+        placeholder="nickname"
+        required
+      />
+
+      <!-- E-mail -->
+      <input
+        type="email"
+        id="user_id"
+        class="form-control mb-4"
+        placeholder="E-mail"
+        required
+      />
+
+      <!-- Password -->
+      <input
+        type="password"
+        id="user_pwd"
+        class="form-control"
+        placeholder="Password"
+        aria-describedby="defaultRegisterFormPasswordHelpBlock"
+        required
+      />
+      <small
+        id="defaultRegisterFormPasswordHelpBlock"
+        class="form-text text-muted mb-4"
+      >
+        영문, 숫자를 포함하는 6자리 이상 16자리 이하 비밀번호
+      </small>
+
+      <!-- Sign up button -->
+      <input
+        id="register"
+        class="btn btn-info my-4 btn-block"
+        type="button"
+        value="Sign in"
+      />
+      <!--
+      <p>
+        By clicking <em>Sign up</em> you agree to our
+        <a href="" target="_blank">terms of service</a>
+      </p>
+      -->
+    </form>
+    <%- include("../default/footer"); %>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $("#register").click(function () {
+          console.log();
+          const pattern = /^[A-Za-z0-9]{6,16}$/;
+          const pwd = $("#user_pwd").val();
+          if (!pattern.test(pwd)) {
+            alert("비밀번호가 형식에 맞지 않습니다.");
+            return false;
+          }
+
+          var action = $("#register-form").attr("action");
+
+          const form_data = {
+            user_nickname: $("#user_nickname").val(),
+            user_id: $("#user_id").val(),
+            user_pwd: $("#user_pwd").val(),
+          };
+
+          $.ajax({
+            type: "POST",
+            url: action,
+            data: form_data,
+            success: function (response) {
+              if (response == "success") {
+                alert("가입에 성공하였습니다.");
+                opener.location.reload();
+                window.close();
+              } else if (response == "already exists") {
+                alert("이미 존재하는 이메일입니다.");
+              } else {
+                alert("다시 시도해 주세요.");
+              }
+            },
+          });
+          return false;
+        });
+      });
+    </script>
+  </body>
+</html>

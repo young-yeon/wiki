@@ -25,7 +25,13 @@ const edit = (req, res) => {
 
     const subtitle = result.subtitle;
     const data = result.data;
-    res.render("edit/index", { title, subtitle, data });
+    const nickname = req.session.nickname;
+    res.render("edit/index", {
+      title,
+      subtitle,
+      data,
+      nickname,
+    });
   });
 };
 
