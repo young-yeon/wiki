@@ -3,9 +3,11 @@ const querystring = require("querystring");
 
 const idx = function (req, res, next) {
   const nickname = req.session.nickname;
+  const accLevel = req.session.accessLevel || -1;
   res.render("index", {
     title: "안녕, 고래!",
     nickname,
+    accLevel,
   });
 };
 

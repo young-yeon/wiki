@@ -1,4 +1,5 @@
 const UserModel = require("../../models/user");
+const bcrypt = require("bcrypt-nodejs");
 
 const loginPage = (req, res) => {
   res.render("auth/index");
@@ -6,21 +7,25 @@ const loginPage = (req, res) => {
 
 const login = (req, res) => {
   const body = req.body;
-  UserModel.findOne(
-    { email: body.user_id, password: body.user_pwd },
-    (err, result) => {
-      if (err) {
-        return res.status(500).end();
-      }
-      if (result) {
-        req.session.nickname = result.nickname;
-        req.session.id = result._id;
-        req.session.accessLevel = result.accessLevel;
-        return res.send("success");
-      }
-      return res.status(400).send("fail");
+  const password = body.user_pwd;
+  UserModel.findOne({ email: body.user_id }, (err, result) => {
+    if (err) {
+      return res.status(500).end();
     }
-  );
+    if (result) {
+      try {
+        if (bcrypt.compareSync(password, result.password)) {
+          req.session.nickname = result.nickname;
+          req.session.id = result._id;
+          req.session.accessLevel = result.accessLevel;
+          return res.send("success");
+        } else return res.send("이메일 또는 비밀번호가 틀렸습니다.");
+      } catch (error) {
+        return res.send("서버 에러입니다.")
+      }
+    }
+    return res.send("이메일 또는 비밀번호가 틀렸습니다.")
+  });
 };
 
 const logout = (req, res) => {
@@ -37,22 +42,21 @@ const registerPage = (req, res) => {
 const register = (req, res) => {
   const nickname = req.body.user_nickname;
   const email = req.body.user_id;
-  const password = req.body.user_pwd;
+
+  const salt = bcrypt.genSaltSync(10);
+  const password = bcrypt.hashSync(req.body.user_pwd, salt);
 
   UserModel.exists({ email }, (err, result) => {
-    if (err) return res.status(500).send("fail");
-    if (result) return res.send("already exists");
+    if (err) return res.status(500).end();
+    if (result) return res.send("이미 존재하는 계정입니다.");
   });
 
   UserModel.create({ nickname, email, password }, (err, result) => {
-    if (err) return res.status(500).send("fail");
+    if (err) return res.send("계정 등록에 오류가 있습니다.");
     req.session._id = result._id;
     req.session.nickname = result.nickname;
     req.session.accessLevel = result.accessLevel;
 
-    console.log(
-      req.session._id + req.session.nickname + req.session.accessLevel
-    );
     res.send("success");
   });
 };

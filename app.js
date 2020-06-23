@@ -5,8 +5,7 @@ var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-const session = require("express-session");
-const bcrypt = require("bcrypt-nodejs");
+var session = require("express-session");
 
 var controller = require("./controll");
 var favicon = require("express-favicon");

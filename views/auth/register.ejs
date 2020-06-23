@@ -87,10 +87,8 @@
                 alert("가입에 성공하였습니다.");
                 opener.location.reload();
                 window.close();
-              } else if (response == "already exists") {
-                alert("이미 존재하는 이메일입니다.");
               } else {
-                alert("다시 시도해 주세요.");
+                alert(response);
               }
             },
           });

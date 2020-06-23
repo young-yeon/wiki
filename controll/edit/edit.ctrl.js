@@ -12,6 +12,8 @@ const redirect = (req, res, next) => {
 
 const edit = (req, res) => {
   const title = req.params.title;
+  const nickname = req.session.nickname;
+  const accLevel = req.session.accessLevel;
 
   WikiModel.findOne({ title: title }, (err, result) => {
     if (err) return res.status(500).end();
@@ -20,17 +22,20 @@ const edit = (req, res) => {
         title,
         subtitle: undefined,
         data: undefined,
+        nickname,
+        accLevel,
       });
     }
 
     const subtitle = result.subtitle;
     const data = result.data;
-    const nickname = req.session.nickname;
     res.render("edit/index", {
       title,
       subtitle,
       data,
       nickname,
+      accLevel,
+      docLevel: result.level,
     });
   });
 };
@@ -39,9 +44,12 @@ const update = (req, res) => {
   const title = req.params.title;
   const data = req.body.data;
   const subtitle = req.body.subtitle;
+  const level = req.session.accessLevel;
+
+  // level 권한 체크 필요
 
   WikiModel.findOneAndUpdate(
-    { title: title },
+    { title },
     { title, subtitle, data, created: Date.now() },
     (err, result) => {
       if (err) return res.status(500).end();

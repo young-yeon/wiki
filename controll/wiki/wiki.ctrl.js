@@ -18,14 +18,20 @@ const redirect = (req, res, next) => {
 
 const search = (req, res) => {
   const title = req.params.title;
+  const nickname = req.session.nickname;
+  const accLevel = req.session.accessLevel || -1;
 
   WikiModel.findOne({ title: title }, (err, result) => {
     if (err) return res.status(500).end();
-    if (!result) return res.render("wiki/empty", { title });
+    if (!result)
+      return res.render("wiki/empty", {
+        title,
+        nickname,
+        accLevel,
+      });
     const subtitle = result.subtitle;
     const data = marked(result.data);
     const created = result.created;
-    const nickname = req.session.nickname;
 
     res.render("wiki/index", {
       title,
@@ -33,6 +39,8 @@ const search = (req, res) => {
       data,
       created,
       nickname,
+      accLevel,
+      docLevel: result.level,
     });
   });
 };
