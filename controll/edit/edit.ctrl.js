@@ -44,23 +44,32 @@ const update = (req, res) => {
   const title = req.params.title;
   const data = req.body.data;
   const subtitle = req.body.subtitle;
-  const level = req.session.accessLevel;
+  const nickname = req.session.nickname;
+  const level = req.session.accessLevel || -1;
 
-  // level 권한 체크 필요
-
-  WikiModel.findOneAndUpdate(
-    { title },
-    { title, subtitle, data, created: Date.now() },
-    (err, result) => {
-      if (err) return res.status(500).end();
-      if (!result) {
-        WikiModel.create({ title, subtitle, data }, (err, _) => {
+  WikiModel.findOne({ title }, (err, result) => {
+    if (level < result.level)
+      return res.status(403).render("error", {
+        error: { status: 403 },
+        message: "접근 권한이 없습니다.",
+        nickname,
+      });
+    else {
+      WikiModel.findOneAndUpdate(
+        { title },
+        { title, subtitle, data, created: Date.now() },
+        (err, result) => {
           if (err) return res.status(500).end();
-        });
-      }
-      res.redirect("/w/" + querystring.escape(title));
+          if (!result) {
+            WikiModel.create({ title, subtitle, data }, (err, _) => {
+              if (err) return res.status(500).end();
+            });
+          }
+          res.redirect("/w/" + querystring.escape(title));
+        }
+      );
     }
-  );
+  });
 };
 
 module.exports = { redirect, edit, update };
