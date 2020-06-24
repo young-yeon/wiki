@@ -19,12 +19,13 @@ const login = (req, res) => {
           req.session.id = result._id;
           req.session.accessLevel = result.accessLevel;
           return res.send("success");
-        } else return res.send("이메일 또는 비밀번호가 틀렸습니다.");
+        } else
+          return res.status(404).send("이메일 또는 비밀번호가 틀렸습니다.");
       } catch (error) {
-        return res.send("서버 에러입니다.")
+        return res.status(500).send("서버 에러입니다.");
       }
     }
-    return res.send("이메일 또는 비밀번호가 틀렸습니다.")
+    return res.status(404).send("이메일 또는 비밀번호가 틀렸습니다.");
   });
 };
 
@@ -43,21 +44,22 @@ const register = (req, res) => {
   const nickname = req.body.user_nickname;
   const email = req.body.user_id;
 
-  const salt = bcrypt.genSaltSync(10);
-  const password = bcrypt.hashSync(req.body.user_pwd, salt);
-
   UserModel.exists({ email }, (err, result) => {
-    if (err) return res.status(500).end();
-    if (result) return res.send("이미 존재하는 계정입니다.");
-  });
+    if (err) return res.status(500).send("계정 등록에 오류가 있습니다");
+    if (result) return res.status(409).send("이미 존재하는 계정입니다.");
+    else {
+      const salt = bcrypt.genSaltSync(10);
+      const password = bcrypt.hashSync(req.body.user_pwd, salt);
 
-  UserModel.create({ nickname, email, password }, (err, result) => {
-    if (err) return res.send("계정 등록에 오류가 있습니다.");
-    req.session._id = result._id;
-    req.session.nickname = result.nickname;
-    req.session.accessLevel = result.accessLevel;
+      UserModel.create({ nickname, email, password }, (err, result) => {
+        if (err) return res.status(500).send("계정 등록에 오류가 있습니다.");
+        req.session._id = result._id;
+        req.session.nickname = result.nickname;
+        req.session.accessLevel = result.accessLevel;
 
-    res.send("success");
+        res.status(201).send("success");
+      });
+    }
   });
 };
 

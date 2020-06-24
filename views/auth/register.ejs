@@ -91,6 +91,10 @@
                 alert(response);
               }
             },
+            error: function (request, status, error) {
+              console.log(request);
+              alert(request.responseText);
+            },
           });
           return false;
         });

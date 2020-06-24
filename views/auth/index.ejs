@@ -61,8 +61,12 @@
                 opener.location.reload();
                 window.close();
               } else {
-                alert(response)
+                alert(response);
               }
+            },
+            error: function (request, status, error) {
+              console.log(request);
+              alert(request.responseText);
             },
           });
           return false;
