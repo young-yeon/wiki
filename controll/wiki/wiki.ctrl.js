@@ -28,6 +28,7 @@ const search = (req, res) => {
         title,
         nickname,
         accLevel,
+        docLevel: 1,
       });
     const subtitle = result.subtitle;
     const data = marked(result.data);

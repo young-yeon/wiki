@@ -48,7 +48,21 @@ const update = (req, res) => {
   const level = req.session.accessLevel || -1;
 
   WikiModel.findOne({ title }, (err, result) => {
-    if (level < result.level)
+    console.log(result, level);
+    if (!result) {
+      if (level > 0) {
+        WikiModel.create({ title, subtitle, data }, (err, _) => {
+          if (err) return res.status(500).end();
+          return res.redirect("/w/" + querystring.escape(title));
+        });
+      } else {
+        return res.status(403).render("error", {
+          error: { status: 403 },
+          message: "접근 권한이 없습니다.",
+          nickname,
+        });
+      }
+    } else if (result && level < result.level)
       return res.status(403).render("error", {
         error: { status: 403 },
         message: "접근 권한이 없습니다.",
@@ -60,12 +74,7 @@ const update = (req, res) => {
         { title, subtitle, data, created: Date.now() },
         (err, result) => {
           if (err) return res.status(500).end();
-          if (!result) {
-            WikiModel.create({ title, subtitle, data }, (err, _) => {
-              if (err) return res.status(500).end();
-            });
-          }
-          res.redirect("/w/" + querystring.escape(title));
+          return res.redirect("/w/" + querystring.escape(title));
         }
       );
     }
