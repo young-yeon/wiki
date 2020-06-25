@@ -4,7 +4,9 @@ node.js project
 응용프로그래밍 노드JS 수행평가용 파일
 
 
-해야할 것: 계정 정보 페이지, forgot password, 계정 관리자 페이지
+해야할 것:
+
+계정 정보 페이지, forgot password, 계정 관리자 페이지, 문서 삭제 버튼 (어드민 레벨)
 
 - - -
 
