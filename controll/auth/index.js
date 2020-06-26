@@ -8,4 +8,6 @@ router.get("/logout", ctrl.logout);
 router.get("/register", ctrl.registerPage);
 router.post("/register", ctrl.register);
 
+router.post("/emailChk", ctrl.sendMail);
+
 module.exports = router;
