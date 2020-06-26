@@ -2,6 +2,7 @@
 <html>
   <%- include("../default/header"); %>
   <body>
+    <label id="isRun" hidden>false</label>
     <!-- Default form register -->
     <form
       id="register-form"
@@ -15,18 +16,27 @@
         type="text"
         id="user_nickname"
         class="form-control mb-4"
-        placeholder="nickname"
+        placeholder="Nickname"
         required
       />
 
-      <!-- E-mail -->
       <input
         type="email"
         id="user_id"
         class="form-control mb-4"
         placeholder="E-mail"
+        aria-describedby="verify-email-check"
         required
       />
+      <div id="verify-email-check" class="form-text text-muted mb-4">
+        <button
+          id="verify-email"
+          type="button"
+          class="btn btn-info my-4 btn-block"
+        >
+          Send Email Authentication Number
+        </button>
+      </div>
 
       <!-- Password -->
       <input
@@ -62,7 +72,10 @@
     <script type="text/javascript">
       $(document).ready(function () {
         $("#register").click(function () {
-          console.log();
+          if (!$("#certNum").val()) {
+            alert("이메일 인증을 먼저 진행해 주세요!");
+            return false;
+          }
           const pattern = /^[A-Za-z0-9]{6,16}$/;
           const pwd = $("#user_pwd").val();
           if (!pattern.test(pwd)) {
@@ -75,6 +88,7 @@
           const form_data = {
             user_nickname: $("#user_nickname").val(),
             user_id: $("#user_id").val(),
+            certNumber: $("#certNum").val(),
             user_pwd: $("#user_pwd").val(),
           };
 
@@ -91,6 +105,38 @@
                 alert(response);
               }
             },
+            error: function (request, status, error) {
+              console.log(request);
+              alert(request.responseText);
+            },
+          });
+          return false;
+        });
+
+        $("#verify-email").click(function () {
+          const address = $("#user_id").val();
+          if (!address) {
+            alert("이메일을 먼저 입력해주세요!");
+            return false;
+          }
+          const form_data = { email: address };
+          console.log(form_data);
+          const changeHTML = () => {
+            var doc =
+              '<input type="text" id="certNum"' +
+              ' class="form-control mb-4"' +
+              ' placeholder="Authentication Number"' +
+              " required />";
+
+            document.getElementById("isRun").innerText = "true";
+            document.getElementById("verify-email-check").innerHTML = doc;
+          };
+
+          $.ajax({
+            type: "POST",
+            url: "/auth/emailChk",
+            data: form_data,
+            success: changeHTML,
             error: function (request, status, error) {
               console.log(request);
               alert(request.responseText);
