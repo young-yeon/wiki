@@ -60,6 +60,7 @@ const update = (req, res) => {
           error: { status: 403 },
           message: "접근 권한이 없습니다.",
           nickname,
+          accLevel: level,
         });
       }
     } else if (result && level < result.level)
@@ -67,6 +68,7 @@ const update = (req, res) => {
         error: { status: 403 },
         message: "접근 권한이 없습니다.",
         nickname,
+        accLevel: level
       });
     else {
       WikiModel.findOneAndUpdate(
