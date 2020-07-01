@@ -116,7 +116,7 @@
               <td><a href="/w/<%= elem.title %>"><%= elem.subtitle %></a></td>
               <td><%= elem.created %></td>
               <td><%= elem.level %></td>
-              <% if (accLevel == 3) { %>
+              <% if (accLevel >= 2) { %>
               <td>
                 <button
                   type="button"
