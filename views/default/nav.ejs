@@ -70,7 +70,7 @@
         class="dropdown-menu dropdown-menu-right dropdown-default"
         aria-labelledby="navbarDropdownMenuLink-333"
       >
-        <button class="dropdown-item">
+        <button class="dropdown-item" onclick="location.href='/user'">
           <%= nickname %> - Level: <%= accLevel %>
         </button>
         <button id="logout" class="dropdown-item">log out</button>
@@ -79,15 +79,17 @@
     <script type="text/javascript">
       $(document).ready(function () {
         $("#logout").click(function () {
-          $.ajax({
-            type: "GET",
-            url: "/auth/logout",
-            success: function (response) {
-              location.reload();
-              alert("로그아웃 되었습니다.");
-            },
-          });
-          return false;
+          if (confirm("정말 로그아웃 하시겠습니까?")) {
+            $.ajax({
+              type: "GET",
+              url: "/auth/logout",
+              success: function (response) {
+                location.reload();
+                alert("로그아웃 되었습니다.");
+              },
+            });
+            return false;
+          }
         });
       });
     </script>

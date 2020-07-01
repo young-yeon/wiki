@@ -28,7 +28,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(favicon(__dirname + "/public/favicon/favicon.ico"));
 app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
@@ -51,8 +51,10 @@ app.use(function (err, req, res, next) {
 
   res.status(err.status || 500);
   const nickname = req.session.nickname;
+  const accLevel = req.session.accessLevel || -1;
   res.render("error", {
     nickname,
+    accLevel,
   });
 });
 

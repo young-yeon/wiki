@@ -21,14 +21,13 @@ const login = (req, res) => {
           req.session.nickname = result.nickname;
           req.session._id = result._id;
           req.session.accessLevel = result.accessLevel;
-          return res.send("success");
+          return res.status(200).end();
         } else
           return res.status(404).send("이메일 또는 비밀번호가 틀렸습니다.");
       } catch (error) {
         return res.status(500).send("서버 에러입니다.");
       }
-    }
-    return res.status(404).send("이메일 또는 비밀번호가 틀렸습니다.");
+    } else return res.status(404).send("이메일 또는 비밀번호가 틀렸습니다.");
   });
 };
 
@@ -48,28 +47,60 @@ const register = (req, res) => {
   const email = req.body.user_id;
   const certNumber = req.body.certNumber;
 
+  if (nickname.length > 15) {
+    return res.status(403).send("닉네임의 길이는 최대 15자입니다.");
+  } else {
+    CertModel.exists({ email, certNumber }, (err, result) => {
+      if (err) return res.status(500).send("서버 에러입니다.");
+      if (!result) return res.status(403).send("잘못된 인증 번호입니다.");
+      else {
+        UserModel.exists({ email }, (err, result) => {
+          if (err) return res.status(500).send("계정 등록에 오류가 있습니다");
+          if (result) return res.status(409).send("이미 존재하는 계정입니다.");
+          else {
+            const salt = bcrypt.genSaltSync(10);
+            const password = bcrypt.hashSync(req.body.user_pwd, salt);
+
+            UserModel.create({ nickname, email, password }, (err, result) => {
+              if (err)
+                return res.status(500).send("계정 등록에 오류가 있습니다.");
+              req.session._id = result._id;
+              req.session.nickname = result.nickname;
+              req.session.accessLevel = result.accessLevel;
+
+              res.status(201).end();
+            });
+          }
+        });
+      }
+    });
+  }
+};
+
+const forgotPassword = (req, res) => {
+  res.render("auth/password");
+};
+
+const updatePassword = (req, res) => {
+  const email = req.body.user_id;
+  const certNumber = req.body.certNumber;
+
   CertModel.exists({ email, certNumber }, (err, result) => {
     if (err) return res.status(500).send("서버 에러입니다.");
     if (!result) return res.status(403).send("잘못된 인증 번호입니다.");
     else {
-      UserModel.exists({ email }, (err, result) => {
-        if (err) return res.status(500).send("계정 등록에 오류가 있습니다");
-        if (result) return res.status(409).send("이미 존재하는 계정입니다.");
-        else {
-          const salt = bcrypt.genSaltSync(10);
-          const password = bcrypt.hashSync(req.body.user_pwd, salt);
+      const salt = bcrypt.genSaltSync(10);
+      const password = bcrypt.hashSync(req.body.user_pwd, salt);
 
-          UserModel.create({ nickname, email, password }, (err, result) => {
-            if (err)
-              return res.status(500).send("계정 등록에 오류가 있습니다.");
-            req.session._id = result._id;
-            req.session.nickname = result.nickname;
-            req.session.accessLevel = result.accessLevel;
-
-            res.status(201).send("success");
-          });
+      UserModel.findOneAndUpdate(
+        { email },
+        { password },
+        (err, updateResult) => {
+          if (err) return res.status(500).send("계정 등록에 오류가 있습니다");
+          if (!updateResult) return res.status(404).send("없는 계정입니다.");
+          else return res.status(200).end();
         }
-      });
+      );
     }
   });
 };
@@ -107,4 +138,58 @@ async function sendMail(req, res) {
   }
 }
 
-module.exports = { loginPage, login, logout, registerPage, register, sendMail };
+const changeNickname = (req, res) => {
+  res.render("auth/changeNickname");
+};
+
+const updateNickname = (req, res) => {
+  const body = req.body;
+  const nickname = body.user_nickname;
+  const password = body.user_pwd;
+  const email = body.user_id;
+  if (nickname.length > 15) {
+    return res.status(403).send("닉네임의 길이는 최대 15자입니다.");
+  } else {
+    UserModel.findOne({ email }, (err, result) => {
+      if (err) {
+        return res.status(500).end();
+      }
+      if (result) {
+        try {
+          if (bcrypt.compareSync(password, result.password)) {
+            UserModel.findOneAndUpdate(
+              { email },
+              { nickname },
+              (error, updateResult) => {
+                if (error || !updateResult)
+                  return res.status(500).send("서버 에러입니다.");
+                else {
+                  req.session.nickname = nickname;
+                  req.session._id = result._id;
+                  req.session.accessLevel = result.accessLevel;
+                  return res.status(200).end();
+                }
+              }
+            );
+          } else
+            return res.status(404).send("이메일 또는 비밀번호가 틀렸습니다.");
+        } catch (error) {
+          return res.status(500).send("서버 에러입니다.");
+        }
+      } else return res.status(404).send("이메일 또는 비밀번호가 틀렸습니다.");
+    });
+  }
+};
+
+module.exports = {
+  loginPage,
+  login,
+  logout,
+  registerPage,
+  register,
+  forgotPassword,
+  updatePassword,
+  sendMail,
+  changeNickname,
+  updateNickname,
+};

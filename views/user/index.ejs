@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <%- include("../default/header"); %>
+  <body>
+    <%- include("../default/nav"); %>
+
+    <div class="jumbotron">
+      <div class="jumbotron text-center">
+        <% if(nickname) { %>
+        <h2 class="display-4 text-default"><%= nickname %></h2>
+        <p class="lead">나의 정보</p>
+        <hr class="my-4" />
+        <h3>유저 레벨 : <%= accLevel %></h3>
+        <% if (accLevel == 1) { %>
+        <p>기본적인 문서 작성이 가능합니다!</p>
+        <% } else if (accLevel == 2) { %>
+        <p>일부 특수 문서까지 수정이 가능합니다!</p>
+        <% } else { %>
+        <p>모든 문서 수정이 가능합니다!</p>
+        <% } %>
+        <p>마음대로 작성하고 수정하세요!</p>
+
+        <button
+          type="button"
+          class="btn btn-outline-primary waves-effect"
+          href="#"
+          onclick="window.open('/auth/change-nickname',
+      '고래위키에 로그인',
+      'toolbar=no,location=no,status=no,menubar=no,scrollbars=auto,resizable=no,directories=no,width=500,height=500' )"
+        >
+          update account
+        </button>
+        <button
+          id="logout"
+          class="btn btn-outline-primary waves-effect"
+          onclick="logout()"
+        >
+          log out
+        </button>
+        <script type="text/javascript">
+          function logout() {
+            if (confirm("정말 로그아웃 하시겠습니까?")) {
+              $.ajax({
+                type: "GET",
+                url: "/auth/logout",
+                success: function (response) {
+                  location.reload();
+                  alert("로그아웃 되었습니다.");
+                },
+              });
+              return false;
+            }
+          }
+        </script>
+
+        <% } else { %>
+        <h2 class="display-4 text-warning">UNKNOWN</h2>
+        <p class="lead">먼저 로그인을 해주세요</p>
+        <hr class="my-4" />
+        <p>문서 편집 권한이 없습니다.</p>
+        <button
+          type="button"
+          class="btn btn-outline-primary waves-effect"
+          href="#"
+          onclick="window.open('/auth/login',
+      '고래위키에 로그인',
+      'toolbar=no,location=no,status=no,menubar=no,scrollbars=auto,resizable=no,directories=no,width=500,height=500' )"
+        >
+          Login
+        </button>
+        <% } %>
+      </div>
+    </div>
+    <%- include("../default/footer"); %>
+  </body>
+</html>
