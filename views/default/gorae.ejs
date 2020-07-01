@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <%- include("header"); %>
+  <body>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark primary-color">
+      <!-- Navbar brand -->
+      <a class="navbar-brand" href="/">
+        Whale Wiki
+      </a>
+
+      <!-- Collapse button -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#basicExampleNav"
+        aria-controls="basicExampleNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapsible content -->
+      <div class="collapse navbar-collapse" id="basicExampleNav">
+        <!-- Links -->
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/random">Random</a>
+          </li>
+        </ul>
+        <!-- Links -->
+
+        <form
+          class="form-inline my-2 my-lg-0 ml-auto"
+          action="/w/"
+          method="GET"
+        >
+          <input
+            class="form-control"
+            type="search"
+            name="q"
+            placeholder="Search"
+            aria-label="Search"
+            required
+          />
+          <button
+            class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3"
+            type="submit"
+          >
+            Search
+          </button>
+        </form>
+      </div>
+      <!-- Collapsible content -->
+    </nav>
+    <!--/.Navbar-->
+
+    <div class="jumbotron text-center">
+      <h2 class="display-4">고래가 난다요</h2>
+      <p class="lead">고래위키는 안나다요!</p>
+      <hr class="my-4" />
+      <!-- Card image -->
+      <img src="/images/gorae.jpg" class="img-fluid" alt="" />
+    </div>
+    <%- include("footer"); %>
+  </body>
+</html>
