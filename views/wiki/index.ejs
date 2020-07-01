@@ -41,11 +41,42 @@
           >
             문서 수정하기
           </button>
+          <% if (accLevel == 3) { %>
+          <td>
+            <button
+              type="button"
+              class="btn btn-danger btn-rounded"
+              onclick="del('<%= title %>')"
+            >
+              X
+            </button>
+          </td>
+          <% } %>
         </div>
         <!-- Grid row -->
       </div>
       <!-- Jumbotron -->
     </div>
-    <%- include("../default/edit"); %> <%- include("../default/footer"); %>
+    <% if (accLevel == 3) { %>
+    <script type="text/javascript">
+      function del(title) {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          $.ajax({
+            type: "DELETE",
+            url: "/w/" + title,
+            success: function (response) {
+              alert("삭제되었습니다.");
+              document.location.reload();
+            },
+            error: function (request, status, error) {
+              console.log(request);
+              alert(request.responseText);
+            },
+          });
+        }
+      }
+    </script>
+    <% } %> <%- include("../default/edit"); %> <%- include("../default/footer");
+    %>
   </body>
 </html>

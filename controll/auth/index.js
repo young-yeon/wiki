@@ -8,9 +8,9 @@ router.get("/logout", ctrl.logout);
 router.get("/register", ctrl.registerPage);
 router.post("/register", ctrl.register);
 router.get("/forgot-password", ctrl.forgotPassword);
-router.post("/forgot-password", ctrl.updatePassword);
+router.put("/forgot-password", ctrl.updatePassword);
 router.get("/change-nickname", ctrl.changeNickname);
-router.post("/change-nickname", ctrl.updateNickname);
+router.put("/change-nickname", ctrl.updateNickname);
 
 router.post("/emailChk", ctrl.sendMail);
 

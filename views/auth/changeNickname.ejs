@@ -57,7 +57,7 @@
             user_pwd: $("#user_pwd").val(),
           };
           $.ajax({
-            type: "POST",
+            type: "PUT",
             url: action,
             data: form_data,
             success: function (response) {

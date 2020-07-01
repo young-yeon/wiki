@@ -28,7 +28,7 @@
       '고래위키에 로그인',
       'toolbar=no,location=no,status=no,menubar=no,scrollbars=auto,resizable=no,directories=no,width=500,height=500' )"
         >
-          update account
+          닉네임 변경
         </button>
         <button
           id="logout"
@@ -44,7 +44,7 @@
                 type: "GET",
                 url: "/auth/logout",
                 success: function (response) {
-                  location.reload();
+                  location.href = "/";
                   alert("로그아웃 되었습니다.");
                 },
               });

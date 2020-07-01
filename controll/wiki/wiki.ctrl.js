@@ -1,6 +1,7 @@
 const WikiModel = require("../../models/wiki");
 const querystring = require("querystring");
 var marked = require("marked");
+const Wiki = require("../../models/wiki");
 
 const redirect = (req, res, next) => {
   var query = req.query.q;
@@ -68,4 +69,17 @@ const list = (req, res) => {
     .limit(10);
 };
 
-module.exports = { redirect, search, list };
+const deleteWiki = (req, res) => {
+  const title = req.params.title;
+  if (req.session.accessLevel != 3)
+    return res.status(403).send("권한이 없습니다.");
+  else {
+    WikiModel.remove({ title }, (err, result) => {
+      if (err) return res.status(500).send("서버 에러입니다.");
+      if (!result) return res.status(404).send("삭제할 문서가 없습니다.");
+      return res.status(204).end();
+    });
+  }
+};
+
+module.exports = { redirect, search, list, deleteWiki };

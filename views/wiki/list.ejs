@@ -116,6 +116,17 @@
               <td><a href="/w/<%= elem.title %>"><%= elem.subtitle %></a></td>
               <td><%= elem.created %></td>
               <td><%= elem.level %></td>
+              <% if (accLevel == 3) { %>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-rounded"
+                  onclick="del('<%= elem.title %>')"
+                >
+                  X
+                </button>
+              </td>
+              <% } %>
             </tr>
             <% }); %>
           </tbody>
@@ -139,12 +150,37 @@
     <script type="text/javascript">
       function minus(node) {
         node.parentNode.querySelector("input[type=number]").stepDown();
-        location.href = "/w/!list?page=" + node.parentNode.querySelector("input[type=number]").value
+        location.href =
+          "/w/!list?page=" +
+          node.parentNode.querySelector("input[type=number]").value;
       }
+
       function plus(node) {
         node.parentNode.querySelector("input[type=number]").stepUp();
-        location.href = "/w/!list?page=" + node.parentNode.querySelector("input[type=number]").value
+        location.href =
+          "/w/!list?page=" +
+          node.parentNode.querySelector("input[type=number]").value;
       }
     </script>
+    <% if (accLevel == 3) { %>
+    <script type="text/javascript">
+      function del(title) {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          $.ajax({
+            type: "DELETE",
+            url: "/w/" + title,
+            success: function (response) {
+              alert("삭제되었습니다.");
+              document.location.reload();
+            },
+            error: function (request, status, error) {
+              console.log(request);
+              alert(request.responseText);
+            },
+          });
+        }
+      }
+    </script>
+    <% } %>
   </body>
 </html>
