@@ -1,7 +1,6 @@
 const WikiModel = require("../../models/wiki");
 const querystring = require("querystring");
 var marked = require("marked");
-const Wiki = require("../../models/wiki");
 
 const redirect = (req, res, next) => {
   var query = req.query.q;
