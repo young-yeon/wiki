@@ -48,7 +48,6 @@ const update = (req, res) => {
   const level = req.session.accessLevel || -1;
 
   WikiModel.findOne({ title }, (err, result) => {
-    console.log(result, level);
     if (!result) {
       if (level > 0) {
         WikiModel.create({ title, subtitle, data }, (err, _) => {

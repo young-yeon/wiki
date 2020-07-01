@@ -70,7 +70,8 @@ const list = (req, res) => {
 
 const deleteWiki = (req, res) => {
   const title = req.params.title;
-  if (req.session.accessLevel != 3)
+  if (req.session.accessLevel >= 2)
+    // 문서 권한 체크로 변경 (현재는 lv2이상이면 무조건 수정)
     return res.status(403).send("권한이 없습니다.");
   else {
     WikiModel.remove({ title }, (err, result) => {
