@@ -46,4 +46,26 @@ const search = (req, res) => {
   });
 };
 
-module.exports = { redirect, search };
+const list = (req, res) => {
+  const nickname = req.session.nickname;
+  const accLevel = req.session.accessLevel || -1;
+  const page = req.query.page || 1;
+
+  WikiModel.find({}, (err, wikiList) => {
+    if (err) return res.status(500).end();
+    else
+      return res.render("wiki/list", {
+        title: "위키 문서 리스트",
+        subtitle: "문서 제목을 클릭하면 이동합니다.",
+        nickname,
+        accLevel,
+        wikiList,
+        page,
+      });
+  })
+    .sort({ created: -1 })
+    .skip((page - 1) * 10)
+    .limit(10);
+};
+
+module.exports = { redirect, search, list };
