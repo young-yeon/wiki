@@ -1,5 +1,5 @@
 const WikiModel = require("../../models/wiki");
-// const ContModel = require("../../models/contribution")
+const ContModel = require("../../models/contribution");
 const querystring = require("querystring");
 
 const redirect = (req, res, next) => {
@@ -46,14 +46,18 @@ const update = (req, res) => {
   const data = req.body.data;
   const subtitle = req.body.subtitle;
   const nickname = req.session.nickname;
+  const creator_id = req.session._id;
   const level = req.session.accessLevel || -1;
 
   WikiModel.findOne({ title }, (err, result) => {
     if (!result) {
       if (level > 0) {
-        WikiModel.create({ title, subtitle, data }, (err, _) => {
-          if (err) return res.status(500).end();
-          return res.redirect("/w/" + querystring.escape(title));
+        WikiModel.create({ title, subtitle, data }, (err, wikiCreated) => {
+          const wiki_id = wikiCreated._id;
+          ContModel.create({ creator_id, wiki_id, data }, (error, create) => {
+            if (err || error) return res.status(500).end();
+            else return res.redirect("/w/" + querystring.escape(title));
+          });
         });
       } else {
         return res.status(403).render("error", {
@@ -68,16 +72,20 @@ const update = (req, res) => {
         error: { status: 403 },
         message: "접근 권한이 없습니다.",
         nickname,
-        accLevel: level
+        accLevel: level,
       });
     else {
-      
       WikiModel.findOneAndUpdate(
         { title },
         { title, subtitle, data, created: Date.now() },
-        (err, result) => {
-          if (err) return res.status(500).end();
-          return res.redirect("/w/" + querystring.escape(title));
+        (err, update) => {
+          ContModel.create(
+            { creator_id, wiki_id: update._id, data },
+            (error, create) => {
+              if (error || err) return res.status(500).end();
+              else return res.redirect("/w/" + querystring.escape(title));
+            }
+          );
         }
       );
     }

@@ -1,9 +1,14 @@
 const mongoose = require("mongoose");
 
 const ContSchema = new mongoose.Schema({
-  id: {
+  creator_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
+    required: true,
+  },
+  wiki_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "wiki",
     required: true,
   },
   data: {
@@ -17,4 +22,4 @@ const ContSchema = new mongoose.Schema({
 });
 
 const Cont = mongoose.model("cont", ContSchema, "cont");
-module.exports = Cert;
+module.exports = Cont;

@@ -1,4 +1,6 @@
 const WikiModel = require("../../models/wiki");
+const ContModel = require("../../models/contribution");
+const UserModel = require("../../models/user");
 const querystring = require("querystring");
 var marked = require("marked");
 
@@ -34,15 +36,20 @@ const search = (req, res) => {
     const data = marked(result.data);
     const created = result.created;
 
-    res.render("wiki/index", {
-      title,
-      subtitle,
-      data,
-      created,
-      nickname,
-      accLevel,
-      docLevel: result.level,
-    });
+    ContModel.find({ wiki_id: result._id }, (err, cont) => {
+      UserModel.findById(cont[0].creator_id, (error, creator) => {
+        res.render("wiki/index", {
+          title,
+          subtitle,
+          data,
+          created,
+          nickname,
+          accLevel,
+          docLevel: result.level,
+          creator,
+        });
+      });
+    }).sort({ _id: -1 });
   });
 };
 
