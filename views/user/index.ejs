@@ -47,6 +47,54 @@
                   location.href = "/";
                   alert("로그아웃 되었습니다.");
                 },
+                error: function (request, status, error) {
+                  console.log(request);
+                  alert(request.responseText);
+                },
+              });
+              return false;
+            }
+          }
+        </script>
+        <hr class="my-4" />
+
+        <div class="form-row">
+          <div class="col"></div>
+          <div class="col form-row">
+            <div class="col-md-5"></div>
+            <div class="text-right md-form col-md-4">
+              <input type="password" id="user_pwd" class="form-control row" />
+              <label for="user_pwd">Password</label>
+            </div>
+            <div class="col">
+              <button
+                id="logout"
+                class="btn btn-danger row"
+                onclick="withdrawal()"
+              >
+                탈퇴하기
+              </button>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript">
+          function withdrawal() {
+            if (confirm("정말 탈퇴 하시겠습니까?")) {
+              const passwd = $("#user_pwd").val();
+              $.ajax({
+                type: "DELETE",
+                url: "/auth/withdrawal",
+                data: {
+                  passwd,
+                },
+                success: function (response) {
+                  location.href = "/";
+                  alert("탈퇴 되었습니다.");
+                },
+                error: function (request, status, error) {
+                  console.log(request);
+                  alert(request.responseText);
+                },
               });
               return false;
             }

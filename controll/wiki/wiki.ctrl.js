@@ -70,16 +70,17 @@ const list = (req, res) => {
 
 const deleteWiki = (req, res) => {
   const title = req.params.title;
-  if (req.session.accessLevel >= 2)
-    // 문서 권한 체크로 변경 (현재는 lv2이상이면 무조건 수정)
-    return res.status(403).send("권한이 없습니다.");
-  else {
-    WikiModel.remove({ title }, (err, result) => {
-      if (err) return res.status(500).send("서버 에러입니다.");
-      if (!result) return res.status(404).send("삭제할 문서가 없습니다.");
-      return res.status(204).end();
-    });
-  }
+  WikiModel.findOne({ title }, (err, result) => {
+    if (req.session.accessLevel < result.level)
+      return res.status(403).send("권한이 없습니다.");
+    else {
+      WikiModel.deleteOne({ title }, (error, _) => {
+        if (error) return res.status(500).send("서버 에러입니다.");
+        if (!result) return res.status(404).send("삭제할 문서가 없습니다.");
+        return res.status(204).end();
+      });
+    }
+  });
 };
 
 module.exports = { redirect, search, list, deleteWiki };

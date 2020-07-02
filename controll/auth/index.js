@@ -11,6 +11,7 @@ router.get("/forgot-password", ctrl.forgotPassword);
 router.put("/forgot-password", ctrl.updatePassword);
 router.get("/change-nickname", ctrl.changeNickname);
 router.put("/change-nickname", ctrl.updateNickname);
+router.delete("/withdrawal", ctrl.withdrawal);
 
 router.post("/emailChk", ctrl.sendMail);
 

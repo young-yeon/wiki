@@ -1,4 +1,5 @@
 const WikiModel = require("../../models/wiki");
+// const ContModel = require("../../models/contribution")
 const querystring = require("querystring");
 
 const redirect = (req, res, next) => {
@@ -70,6 +71,7 @@ const update = (req, res) => {
         accLevel: level
       });
     else {
+      
       WikiModel.findOneAndUpdate(
         { title },
         { title, subtitle, data, created: Date.now() },

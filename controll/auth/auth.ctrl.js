@@ -181,6 +181,30 @@ const updateNickname = (req, res) => {
   }
 };
 
+const withdrawal = (req, res) => {
+  const id = req.session._id;
+  const password = req.body.passwd;
+  UserModel.findById(id, (err, result) => {
+    if (err) return res.status(500).send("서버 에러입니다.");
+    if (!result) return res.status(500).send("계정을 찾을 수 없습니다.");
+    else {
+      if (bcrypt.compareSync(password, result.password)) {
+        UserModel.findByIdAndDelete(id, (error, _) => {
+          if (error) return res.status("서버 에러입니다.");
+          else {
+            delete req.session.nickname;
+            delete req.session._id;
+            delete req.session.accessLevel;
+            return res.status(200).end();
+          }
+        });
+      } else {
+        return res.status(403).send("비밀번호가 틀렸습니다.");
+      }
+    }
+  });
+};
+
 module.exports = {
   loginPage,
   login,
@@ -192,4 +216,5 @@ module.exports = {
   sendMail,
   changeNickname,
   updateNickname,
+  withdrawal,
 };
