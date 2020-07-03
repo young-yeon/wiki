@@ -8,18 +8,21 @@ const redirect = (req, res, next) => {
   var query = req.query.q;
   query = query.trim();
   if (!query) {
-    res.redirect("/");
+    return res.redirect("/");
   }
   query = querystring.escape(query);
   try {
-    res.redirect("/w/" + query);
+    if (query == "!history") return res.redirect("/history");
+    else res.redirect("/w/" + query);
   } catch (exception) {
     res.redirect("/");
   }
 };
 
-const search = (req, res) => {
+async function search(req, res) {
   const title = req.params.title;
+  if (title == "!history") return await res.redirect("/history");
+
   const nickname = req.session.nickname;
   const accLevel = req.session.accessLevel || -1;
 
@@ -51,7 +54,7 @@ const search = (req, res) => {
       });
     }).sort({ _id: -1 });
   });
-};
+}
 
 const list = (req, res) => {
   const nickname = req.session.nickname;

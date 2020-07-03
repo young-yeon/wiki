@@ -32,7 +32,7 @@
         <a class="nav-link" href="/random">삭제신청</a>
       </li> -->
     </ul>
-    
+
     <form class="form-inline my-2 my-lg-0 ml-auto" action="/w/" method="GET">
       <input
         class="form-control"
@@ -40,28 +40,30 @@
         name="q"
         placeholder="Search"
         aria-label="Search"
-        required
       />
-      <button
-        class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3"
-        type="submit"
-      >
-        Search
-      </button>
+      <div class="text-right">
+        <button
+          class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3"
+          type="submit"
+        >
+          Search
+        </button>
+      </div>
     </form>
     <% if (!nickname) { %>
-    <button
-      type="button"
-      class="btn btn-indigo btn-md my-2 my-sm-0 ml-3"
-      href="#"
-      onclick="window.open('/auth/login',
-      '고래위키에 로그인',
-      'toolbar=no,location=no,status=no,menubar=no,scrollbars=auto,resizable=no,directories=no,width=500,height=500' )"
-    >
-      Login
-    </button>
+    <div class="text-right">
+      <input
+        type="button"
+        value="Login"
+        class="btn btn-indigo btn-md my-2 my-sm-0 ml-3"
+        href="#"
+        onclick="window.open('/auth/login',
+        '고래위키에 로그인',
+        'toolbar=no,location=no,status=no,menubar=no,scrollbars=auto,resizable=no,directories=no,width=500,height=500' )"
+      />
+    </div>
     <% } else { %>
-    <div class="nav-item dropdown">
+    <div class="nav-item dropdown text-right">
       <a
         class="nav-link dropdown-toggle"
         id="navbarDropdownMenuLink-333"

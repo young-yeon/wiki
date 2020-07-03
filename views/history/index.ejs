@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <%- include("../default/header"); %>
+  <body>
+    <label id="_title" style="display: none;"><%= title %></label>
+    <%- include("../default/nav"); %>
+    <div class="jumbotron">
+      <!-- Jumbotron -->
+      <div class="jumbotron">
+        <!-- Title -->
+        <div class="text-center">
+          <h2 class="card-title h2"><%= title %></h2>
+        </div>
+        <!-- Grid row -->
+        <div class="row d-flex justify-content-center">
+          <!-- Grid column -->
+          <div class="col-xl-7 pb-2">
+            <%- result.data %>
+          </div>
+          <!-- Grid column -->
+        </div>
+        <!-- Grid row -->
+
+        <hr class="my-4" />
+
+        <div class="row d-flex justify-content-center">
+          <!-- Grid column -->
+          <div class="col-xl-7 pb-2">
+            <p class="card-text">
+              작성일 : <%= result.created %>
+            </p>
+            <p class="card-text">
+              작성자 : <%= user.nickname %>(<%= user.email %>)
+            </p>
+          </div>
+          <!-- Grid column -->
+        </div>
+      </div>
+    </div>
+    <%- include("../default/footer");%>
+  </body>
+</html>
