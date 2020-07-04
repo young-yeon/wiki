@@ -10,7 +10,16 @@
         <h2 class="display-4 text-default"><%= nickname %></h2>
         <p class="lead">나의 정보</p>
         <hr class="my-4" />
-        <h3>유저 레벨 : <%= accLevel %></h3>
+        <h3>
+          유저 레벨 :
+          <a class="text-default"><%= accLevel %></a>
+        </h3>
+        <h3>
+          기여한 문서 :
+          <a class="text-default" href="/history/user/<%= nickname %>"
+            ><%= contribution_count %></a
+          >
+        </h3>
         <% if (accLevel == 1) { %>
         <p>기본적인 문서 작성이 가능합니다!</p>
         <% } else if (accLevel == 2) { %>

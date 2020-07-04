@@ -1,20 +1,17 @@
 const ContModel = require("../../models/contribution");
 
-const userPage = (req, res) => {
+const userPage = async (req, res) => {
   const nickname = req.session.nickname;
   const accLevel = req.session.accessLevel || -1;
   const creator_id = req.session._id;
+  const contribution_count = await ContModel.count({creator_id})
 
-  ContModel.find({ creator_id }, (err, cont) => {
-    if (err) return res.status(500).end();
-    res.render("user/index", {
-      nickname,
-      accLevel,
-      cont,
-    });
-  })
-    .sort({ _id: -1 })
-    .limit(7);
+  res.render("user/index", {
+    creator_id,
+    nickname,
+    accLevel,
+    contribution_count
+  });
 };
 
 module.exports = { userPage };

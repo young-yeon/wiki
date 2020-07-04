@@ -42,7 +42,7 @@ const searchHistory = (req, res) => {
 
   ContModel.findById(history_id, (err, result) => {
     if (!result)
-      return res.render("error", {
+      return res.status(404).render("error", {
         nickname,
         accLevel,
         error: { status: 404 },
@@ -52,7 +52,7 @@ const searchHistory = (req, res) => {
       ContModel.findOne({ wiki_id: result.wiki_id }, async (error, wiki) => {
         if (err || error) return res.status(500).send("서버 에러입니다.");
         if (!wiki)
-          return res.render("error", {
+          return res.status(404).render("error", {
             nickname,
             accLevel,
             error: { status: 404 },
@@ -64,7 +64,7 @@ const searchHistory = (req, res) => {
           );
         else {
           if (!mongoose.Types.ObjectId.isValid(history_id))
-            return res.render("error", {
+            return res.status(404).render("error", {
               nickname,
               accLevel,
               error: { status: 404 },
@@ -176,30 +176,85 @@ const docHistory = async (req, res) => {
   const accLevel = req.session.accessLevel || -1;
   const page = req.query.page || 1;
 
-  const wiki_id = (await WikiModel.findOne({ title }))._id;
-
-  ContModel.find({ wiki_id }, (err, result) => {
-    const wiki = result.map(async (elem) => {
-      const wiki = await WikiModel.findById(elem.wiki_id);
-      const user = await UserModel.findById(elem.creator_id);
-      return { wiki, user, history: elem._id, created: elem.created };
-    });
-    Promise.all(wiki).then((wikiList) => {
-      if (err) return res.status(500).end();
-      else
-        return res.render("history/list", {
-          title,
-          subtitle: "문서 제목을 클릭하면 해당 시점으로 이동합니다.",
-          nickname,
-          accLevel,
-          wikiList,
-          page,
+  WikiModel.findOne({ title }, (err, data) => {
+    if (err) return res.status(500).send("서버 에러입니다.");
+    if (!data)
+      return res.status(404).render("error", {
+        nickname,
+        accLevel,
+        error: { status: 404 },
+        message: "해당 문서 기록을 찾을 수 없습니다.",
+      });
+    else {
+      const wiki_id = data._id;
+      ContModel.find({ wiki_id }, (err, result) => {
+        const wiki = result.map(async (elem) => {
+          const wiki = await WikiModel.findById(elem.wiki_id);
+          const user = await UserModel.findById(elem.creator_id);
+          return { wiki, user, history: elem._id, created: elem.created };
         });
-    });
-  })
-    .sort({ created: -1 })
-    .skip((page - 1) * 10)
-    .limit(10);
+        Promise.all(wiki).then((wikiList) => {
+          if (err) return res.status(500).end();
+          else
+            return res.render("history/list", {
+              title,
+              subtitle: "문서 제목을 클릭하면 해당 시점으로 이동합니다.",
+              nickname,
+              accLevel,
+              wikiList,
+              page,
+            });
+        });
+      })
+        .sort({ created: -1 })
+        .skip((page - 1) * 10)
+        .limit(10);
+    }
+  });
+};
+
+const userHistory = async (req, res) => {
+  const writer = req.params.nickname;
+  const nickname = req.session.nickname;
+  const accLevel = req.session.accessLevel || -1;
+  const page = req.query.page || 1;
+
+  await UserModel.findOne({ nickname: writer }, (err, data) => {
+    if (err) return res.status(500).send("서버 에러입니다.");
+    if (!data)
+      return res.status(404).render("error", {
+        nickname,
+        accLevel,
+        error: { status: 404 },
+        message: "해당 문서 기록을 찾을 수 없습니다.",
+      });
+    else {
+      const creator_id = data._id;
+
+      ContModel.find({ creator_id }, async (err, result) => {
+        const wiki = result.map(async (elem) => {
+          const wiki = await WikiModel.findById(elem.wiki_id);
+          const user = await UserModel.findById(elem.creator_id);
+          return { wiki, user, history: elem._id, created: elem.created };
+        });
+        Promise.all(wiki).then((wikiList) => {
+          if (err) return res.status(500).end();
+          else
+            return res.render("history/list", {
+              title: writer + " - 기여한 문서 목록",
+              subtitle: "문서 제목을 클릭하면 해당 시점으로 이동합니다.",
+              nickname,
+              accLevel,
+              wikiList,
+              page,
+            });
+        });
+      })
+        .sort({ created: -1 })
+        .skip((page - 1) * 10)
+        .limit(10);
+    }
+  });
 };
 
 module.exports = {
@@ -208,4 +263,5 @@ module.exports = {
   updateDoc,
   deleteHistory,
   docHistory,
+  userHistory,
 };
