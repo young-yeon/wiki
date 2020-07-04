@@ -122,7 +122,7 @@
                 <button
                   type="button"
                   class="btn btn-danger btn-rounded"
-                  onclick="del('<%= elem.wiki.history %>')"
+                  onclick="del('<%= elem.history %>')"
                 >
                   X
                 </button>
@@ -165,11 +165,11 @@
     </script>
     <% if (accLevel >= 2) { %>
     <script type="text/javascript">
-      function del(title) {
+      function del(id) {
         if (confirm("정말 삭제하시겠습니까?")) {
           $.ajax({
             type: "DELETE",
-            url: "/history/" + title,
+            url: "/history/" + id,
             success: function (response) {
               alert("삭제되었습니다.");
               document.location.reload();

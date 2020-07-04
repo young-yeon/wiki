@@ -33,10 +33,74 @@
               작성자 : <%= user.nickname %>(<%= user.email %>)
             </p>
           </div>
-          <!-- Grid column -->
+        </div>
+        <div class="pt-2 text-right">
+          <button
+            type="button"
+            class="btn btn-green waves-effect"
+            onclick="location.href='/history/w/<%= title %>'"
+          >
+            역사
+          </button>
+          <button
+            type="button"
+            class="btn btn-blue waves-effect"
+            onclick="update('<%= result._id %>')"
+          >
+            문서 복구하기
+          </button>
+          <% if (accLevel >= 2) { %>
+          <td>
+            <button
+              type="button"
+              class="btn btn-danger btn-rounded"
+              onclick="del('<%= result._id %>')"
+            >
+              X
+            </button>
+          </td>
+          <% } %>
         </div>
       </div>
     </div>
     <%- include("../default/footer");%>
+    <script type="text/javascript">
+      function update(id) {
+        if (confirm("해당 시점으로 문서를 복구하시겠습니까?")) {
+          $.ajax({
+            type: "PUT",
+            url: "/history/" + id,
+            success: function (response) {
+              alert("문서가 복구되었습니다.");
+              location.href = "/w/<%= title %>";
+            },
+            error: function (request, status, error) {
+              console.log(request);
+              alert(request.responseText);
+            },
+          });
+        }
+      }
+    </script>
+    <% if (accLevel >= 2) { %>
+    <script type="text/javascript">
+      function del(id) {
+        if (confirm("해당 문서 기록을 삭제하시겠습니까?")) {
+          $.ajax({
+            type: "DELETE",
+            url: "/history/" + id,
+            success: function (response) {
+              alert("해당 기록이 삭제되었습니다.");
+              location.href = "/w/<%= title %>";
+            },
+            error: function (request, status, error) {
+              console.log(request);
+              alert(request.responseText);
+            },
+          });
+        }
+      }
+    </script>
+    <% } %>
   </body>
 </html>

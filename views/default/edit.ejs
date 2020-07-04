@@ -2,8 +2,10 @@
   const edit = function () {
     if ("<%= accLevel %>" < "<%= docLevel %>") {
       alert(
-        '문서를 편집할 권한이 없습니다.\n 자세한 내용은 "문서작성등급제" 문서를 확인하세요.\n\n' +
-          "사용자 레벨: <%= accLevel %>\n문서 레벨: <%= docLevel %>"
+        "문서를 편집할 권한이 없습니다.\n" +
+          '자세한 내용은 "문서작성등급제" 문서를 확인하세요.\n\n' +
+          "사용자 레벨: <%= accLevel %>\n" +
+          "문서 레벨: <%= docLevel %>"
       );
     } else {
       const title = document.getElementById("_title").textContent;

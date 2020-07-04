@@ -80,10 +80,11 @@ const list = (req, res) => {
 
 const deleteWiki = (req, res) => {
   const title = req.params.title;
-  WikiModel.findOne({ title }, (err, result) => {
+  WikiModel.findOne({ title }, async (err, result) => {
     if (req.session.accessLevel < result.level)
       return res.status(403).send("권한이 없습니다.");
     else {
+      await ContModel.deleteMany({ wiki_id: result._id });
       WikiModel.deleteOne({ title }, (error, _) => {
         if (error) return res.status(500).send("서버 에러입니다.");
         if (!result) return res.status(404).send("삭제할 문서가 없습니다.");
