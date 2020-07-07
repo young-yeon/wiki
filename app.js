@@ -40,6 +40,11 @@ app.use(
   })
 );
 
+app.use((_, res, next) => {
+  res.setHeader('X-Powered-By', 'Happstack')
+  next()
+})
+
 app.use("/", controller);
 
 app.use(function (req, res, next) {
