@@ -5,7 +5,6 @@ const CertSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
-    maxlength: 20,
   },
   certNumber: {
     type: Number,
