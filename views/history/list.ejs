@@ -114,7 +114,7 @@
                   ><%= elem.wiki.title %>
                 </a>
               </th>
-              <td><%= elem.user.nickname %>(<%= elem.user.email %>)</td>
+              <td><%= elem.user.nickname %> (<%= elem.user.email.slice(0, 3)+"***" %>)</td>
               <td><%= elem.created %></td>
               <td><%= elem.level %></td>
               <% if (accLevel >= 2) { %>

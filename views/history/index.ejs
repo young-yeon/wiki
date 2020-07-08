@@ -30,7 +30,7 @@
               작성일 : <%= result.created %>
             </p>
             <p class="card-text">
-              작성자 : <%= user.nickname %>(<%= user.email %>)
+              작성자 : <%= user.nickname %> (<%= user.email.slice(0, 3)+"***" %>)
             </p>
           </div>
         </div>

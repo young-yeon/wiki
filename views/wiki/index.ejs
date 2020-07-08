@@ -31,7 +31,7 @@
               최종수정일 : <%= created %>
             </p>
             <p class="card-text">
-              작성자 : <%= creator.nickname %>(<%= creator.email %>)
+              작성자 : <%= creator.nickname %> (<%= creator.email.slice(0, 3)+"***" %>)
             </p>
           </div>
           <!-- Grid column -->
