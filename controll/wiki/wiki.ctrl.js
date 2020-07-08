@@ -2,7 +2,8 @@ const WikiModel = require("../../models/wiki");
 const ContModel = require("../../models/contribution");
 const UserModel = require("../../models/user");
 const querystring = require("querystring");
-var marked = require("marked");
+const xss = require("xss");
+const marked = require("marked");
 
 const redirect = (req, res, next) => {
   var query = req.query.q;
@@ -36,7 +37,7 @@ async function search(req, res) {
         docLevel: 1,
       });
     const subtitle = result.subtitle;
-    const data = marked(result.data);
+    const data = marked(xss(result.data));
     const created = result.created;
 
     ContModel.find({ wiki_id: result._id }, (err, cont) => {
