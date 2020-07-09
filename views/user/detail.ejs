@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <%- include("../default/header"); %>
+  <body>
+    <%- include("../default/nav"); %>
+
+    <div class="jumbotron">
+      <div class="jumbotron text-center">
+        <h2 class="display-4 text-default"><%= username %></h2>
+        <p class="lead"><%= username %> (<%= userEmail.slice(0, 3)+"***" %>) 님의 정보</p>
+        <hr class="my-4" />
+        <h3>
+          유저 레벨 :
+          <a class="text-default"><%= userLevel %></a>
+        </h3>
+        <h3>
+          기여 횟수 :
+          <a class="text-default" href="/history/user/<%= username %>"
+            ><%= contribution_count %></a
+          >
+        </h3>
+      </div>
+    </div>
+    <%- include("../default/footer"); %>
+  </body>
+</html>

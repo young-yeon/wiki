@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <%- include("../default/header"); %>
+  <%- include("../../default/header"); %>
   <style>
     .number-input input[type="number"] {
       -webkit-appearance: textfield;
@@ -88,105 +88,80 @@
     }
   </style>
   <body>
-    <label id="_title" style="display: none;"><%= title %></label>
-    <%- include("../default/nav"); %>
+    <%- include("../../default/nav"); %>
     <div class="jumbotron">
       <!-- Jumbotron -->
       <div class="jumbotron">
         <!-- Title -->
         <div class="text-center">
-          <h2 class="card-title h2"><%= title %></h2>
-          <p class="blue-text my-4 font-weight-bold"><%= subtitle %></p>
+          <h2 class="card-title h2">문서 목록</h2>
         </div>
         <table id="tablePreview" class="table">
           <thead>
             <tr>
-              <th>제목</th>
-              <th>작성자</th>
-              <th>작성일</th>
+              <th>_id</th>
+              <th>title</th>
+              <th>subtitle</th>
+              <th>level</th>
+              <th>created</th>
             </tr>
           </thead>
           <tbody>
-            <% wikiList.forEach( elem => { %>
+            <% wikis.forEach( elem => { %>
             <tr>
               <th scope="row">
-                <a href="/history/<%= elem.history %>"
-                  ><%= elem.wiki.title %>
-                </a>
+                <%= elem._id %>
               </th>
-              <td>
-                <a href="/user/<%= elem.user.nickname %>"
-                  ><%= elem.user.nickname %> (<%= elem.user.email.slice(0,
-                  3)+"***" %>)</a
-                >
-              </td>
-              <td><%= elem.created %></td>
+              <td><%= elem.title %></td>
+              <td><%= elem.subtitle %></td>
               <td><%= elem.level %></td>
-              <% if (accLevel >= 2) { %>
+              <td><%= elem.created %></td>
               <td>
                 <button
                   type="button"
-                  class="btn btn-danger btn-rounded"
-                  onclick="del('<%= elem.history %>')"
+                  class="btn btn-success btn-rounded"
+                  onclick="location.href='/user/admin/wiki/<%= elem._id %>'"
                 >
-                  X
+                  edit
                 </button>
               </td>
-              <% } %>
             </tr>
             <% }); %>
           </tbody>
         </table>
       </div>
-      <!-- Jumbotron -->
-      <div class="def-number-input number-input safari_only">
-        <button onclick="minus(this)" class="minus"></button>
-        <input
-          class="quantity"
-          min="1"
-          name="quantity"
-          value="<%= page %>"
-          type="number"
-          readonly
-        />
-        <button onclick="plus(this)" class="plus"></button>
+      <div class="text-right">
+        <!-- Jumbotron -->
+        <div class="def-number-input number-input safari_only">
+          <button onclick="minus(this)" class="minus"></button>
+          <input
+            class="quantity"
+            min="1"
+            name="quantity"
+            value="<%= page %>"
+            type="number"
+            readonly
+          />
+          <button onclick="plus(this)" class="plus"></button>
+        </div>
+        <a href="/user/admin" type="button" class="btn btn-info">Back</a>
       </div>
     </div>
-    <%- include("../default/footer"); %>
     <script type="text/javascript">
       function minus(node) {
         node.parentNode.querySelector("input[type=number]").stepDown();
         location.href =
-          "/history?page=" +
+          "/user/admin/wiki?page=" +
           node.parentNode.querySelector("input[type=number]").value;
       }
 
       function plus(node) {
         node.parentNode.querySelector("input[type=number]").stepUp();
         location.href =
-          "/history?page=" +
+          "/user/admin/wiki?page=" +
           node.parentNode.querySelector("input[type=number]").value;
       }
     </script>
-    <% if (accLevel >= 2) { %>
-    <script type="text/javascript">
-      function del(id) {
-        if (confirm("정말 삭제하시겠습니까?")) {
-          $.ajax({
-            type: "DELETE",
-            url: "/history/" + id,
-            success: function (response) {
-              alert("삭제되었습니다.");
-              document.location.reload();
-            },
-            error: function (request, status, error) {
-              console.log(request);
-              alert(request.responseText);
-            },
-          });
-        }
-      }
-    </script>
-    <% } %>
+    <%- include("../../default/footer.ejs"); -%>
   </body>
 </html>

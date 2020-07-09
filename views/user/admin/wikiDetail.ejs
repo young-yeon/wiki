@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <%- include("../../default/header"); %>
+  <body>
+    <%- include("../../default/nav"); %>
+    <div class="jumbotron">
+      <form
+        id="updateForm"
+        class="text-center"
+        action="/user/admin/wiki/<%= wiki._id %>"
+        method="POST"
+      >
+        <div class="md-form">
+          <input
+            type="text"
+            name="_id"
+            id="_id"
+            class="form-control"
+            value="<%= wiki._id %>"
+            required
+            readonly
+          />
+          <label for="_id">_id</label>
+        </div>
+        <div class="md-form">
+          <input
+            type="text"
+            name="title"
+            id="title"
+            class="form-control"
+            value="<%= wiki.title %>"
+            required
+          />
+          <label for="title">title</label>
+        </div>
+        <div class="md-form">
+          <input
+            type="text"
+            name="subtitle"
+            id="subtitle"
+            class="form-control"
+            value="<%= wiki.subtitle %>"
+            required
+          />
+          <label for="subtitle">subtitle</label>
+        </div>
+        <div class="md-form">
+          <input
+            type="text"
+            name="level"
+            id="level"
+            class="form-control"
+            value="<%= wiki.level %>"
+            required
+          />
+          <label for="level">level</label>
+        </div>
+        <div class="md-form">
+          <input
+            type="text"
+            name="created"
+            id="created"
+            class="form-control"
+            value="<%= wiki.created %>"
+            required
+            readonly
+          />
+          <label for="created">created</label>
+        </div>
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="." type="button" class="btn btn-info">Back</a>
+      </form>
+    </div>
+    <%- include("../../default/footer.ejs"); -%>
+  </body>
+</html>

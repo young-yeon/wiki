@@ -46,6 +46,15 @@
         >
           log out
         </button>
+        <% if (accLevel == 3) { %>
+        <a
+          type="button"
+          class="btn btn-outline-primary waves-effect"
+          href="/user/admin"
+        >
+          Admin Page
+        </a>
+        <% } %>
         <script type="text/javascript">
           function logout() {
             if (confirm("정말 로그아웃 하시겠습니까?")) {

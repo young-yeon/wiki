@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <%- include("../../default/header"); %>
+  <body>
+    <%- include("../../default/nav"); %>
+    <div class="jumbotron text-center">
+      <div class="container my-5">
+        <!-- Section: Block Content -->
+        <section>
+          <h6
+            class="font-weight-bold text-center grey-text text-uppercase small mb-4"
+          >
+            Admin Page
+          </h6>
+          <h3 class="font-weight-bold text-center dark-grey-text pb-2">
+            관리자 전용 페이지
+          </h3>
+          <hr class="w-header my-4" />
+          <p class="lead text-center text-muted pt-2 mb-5">
+            데이터 관리
+          </p>
+
+          <div class="row white-text">
+            <!-- Grid column -->
+            <div class="col col-md-6 mb-4">
+              <!-- Card Primary -->
+              <a href="/user/admin/user" class="white-text">
+                <div
+                  class="card classic-admin-card primary-color lighten-1 waves-effect"
+                >
+                  <div class="card-body py-3">
+                    <p class="small">USER</p>
+                    <h4>유저 관리</h4>
+                  </div>
+                </div>
+              </a>
+              <!-- Card Primary -->
+            </div>
+            <!-- Grid column -->
+
+            <!-- Grid column -->
+            <div class="col col-md-6 mb-4">
+              <!-- Card Blue -->
+              <a href="/user/admin/wiki" class="white-text">
+                <div
+                  class="card classic-admin-card light-blue lighten-1 waves-effect"
+                >
+                  <div class="card-body py-3">
+                    <p class="small">WIKI</p>
+                    <h4>문서 관리</h4>
+                  </div>
+                </div>
+              </a>
+              <!-- Card Blue -->
+            </div>
+            <!-- Grid column -->
+          </div>
+        </section>
+        <!-- Section: Block Content -->
+      </div>
+    </div>
+    <%- include("../../default/footer"); %>
+  </body>
+</html>

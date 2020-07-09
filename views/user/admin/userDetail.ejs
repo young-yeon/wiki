@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <%- include("../../default/header"); %>
+  <body>
+    <%- include("../../default/nav"); %>
+    <div class="jumbotron">
+      <form
+        id="updateForm"
+        class="text-center"
+        action="/user/admin/user/<%= user._id %>"
+        method="POST"
+      >
+        <div class="md-form">
+          <input
+            type="text"
+            name="_id"
+            id="_id"
+            class="form-control"
+            value="<%= user._id %>"
+            required
+            readonly
+          />
+          <label for="_id">_id</label>
+        </div>
+        <div class="md-form">
+          <input
+            type="text"
+            name="accessLevel"
+            id="accessLevel"
+            class="form-control"
+            value="<%= user.accessLevel %>"
+            required
+          />
+          <label for="accessLevel">accessLevel</label>
+        </div>
+        <div class="md-form">
+          <input
+            type="text"
+            name="nickname"
+            id="nickname"
+            class="form-control"
+            value="<%= user.nickname %>"
+            required
+          />
+          <label for="nickname">nickname</label>
+        </div>
+        <div class="md-form">
+          <input
+            type="email"
+            name="email"
+            id="email"
+            class="form-control"
+            value="<%= user.email %>"
+            required
+          />
+          <label for="email">email</label>
+        </div>
+        <div class="md-form">
+          <input
+            type="text"
+            name="created"
+            id="created"
+            class="form-control"
+            value="<%= user.created %>"
+            required
+            readonly
+          />
+          <label for="created">created</label>
+        </div>
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="." type="button" class="btn btn-info">Back</a>
+      </form>
+    </div>
+    <%- include("../../default/footer.ejs"); -%>
+  </body>
+</html>

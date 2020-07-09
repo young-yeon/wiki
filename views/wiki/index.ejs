@@ -31,7 +31,11 @@
               최종수정일 : <%= created %>
             </p>
             <p class="card-text">
-              작성자 : <%= creator.nickname %> (<%= creator.email.slice(0, 3)+"***" %>)
+              작성자 :
+              <a href="/user/<%= creator.nickname %>"
+                ><%= creator.nickname %> (<%= creator.email.slice(0, 3)+"***"
+                %>)</a
+              >
             </p>
           </div>
           <!-- Grid column -->

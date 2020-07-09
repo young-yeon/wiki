@@ -29,8 +29,12 @@
             <p class="card-text">
               작성일 : <%= result.created %>
             </p>
+
             <p class="card-text">
-              작성자 : <%= user.nickname %> (<%= user.email.slice(0, 3)+"***" %>)
+              작성자 :
+              <a href="/user/<%= user.nickname %>"
+                ><%= user.nickname %> (<%= user.email.slice(0, 3)+"***" %>)</a
+              >
             </p>
           </div>
         </div>
