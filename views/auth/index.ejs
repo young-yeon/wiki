@@ -59,7 +59,7 @@
               window.close();
             },
             error: function (request, status, error) {
-              if (!request) {
+              if (request) {
                 console.log(request);
                 alert(request.responseText);
               }
