@@ -7,13 +7,7 @@
         <strong>Sign in</strong>
       </h5>
       <div class="card-body px-lg-5 pt-0">
-        <form
-          id="login-form"
-          class="text-center"
-          style="color: #757575;"
-          action="/auth/login"
-          method="POST"
-        >
+        <form id="login-form" class="text-center" style="color: #757575;">
           <div class="md-form">
             <input type="email" id="user_id" class="form-control" required />
             <label for="user_id">E-mail</label>
@@ -33,12 +27,13 @@
               <a href="/auth/forgot-password?">Forgot password?</a>
             </div>
           </div>
-          <input
+          <button
             id="login"
             class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0"
-            type="button"
-            value="Sign in"
-          />
+            type="submit"
+          >
+            Sign in
+          </button>
           <p>
             Not a member?
             <a href="/auth/register">Register</a>
@@ -50,7 +45,7 @@
     <script type="text/javascript">
       $(document).ready(function () {
         $("#login").click(function () {
-          var action = $("#login-form").attr("action");
+          var action = "/auth/login";
           var form_data = {
             user_id: $("#user_id").val(),
             user_pwd: $("#user_pwd").val(),
