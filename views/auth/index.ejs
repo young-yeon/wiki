@@ -59,8 +59,10 @@
               window.close();
             },
             error: function (request, status, error) {
-              console.log(request);
-              alert(request.responseText);
+              if (!request) {
+                console.log(request);
+                alert(request.responseText);
+              }
             },
           });
           return false;
