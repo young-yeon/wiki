@@ -14,15 +14,19 @@ const redirect = (req, res, next) => {
   query = querystring.escape(query);
   try {
     if (query == "!history") return res.redirect("/history");
-    else res.redirect("/w/" + query);
+    else return res.redirect("/w/" + query);
   } catch (exception) {
-    res.redirect("/");
+    return res.redirect("/");
   }
 };
 
 async function search(req, res) {
   const title = req.params.title;
   if (title == "!history") return await res.redirect("/history");
+  if (title.indexOf("!user:") == 0) {
+    var username = title.slice(6).trim();
+    return res.redirect("/user/" + username);
+  }
 
   const nickname = req.session.nickname;
   const accLevel = req.session.accessLevel || -1;

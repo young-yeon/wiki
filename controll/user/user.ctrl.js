@@ -5,7 +5,7 @@ const userPage = async (req, res) => {
   const nickname = req.session.nickname;
   const accLevel = req.session.accessLevel || -1;
   const creator_id = req.session._id;
-  const contribution_count = await ContModel.count({ creator_id });
+  const contribution_count = await ContModel.countDocuments({ creator_id });
 
   res.render("user/index", {
     creator_id,
@@ -18,12 +18,13 @@ const userPage = async (req, res) => {
 const userDetail = async (req, res) => {
   const nickname = req.session.nickname;
   const username = req.params.username;
+  if (username == nickname) return res.redirect("/user")
   const accLevel = req.session.accessLevel || -1;
   const creator = await UserModel.findOne({ nickname: username });
   if (!creator) {
     return res.status(404).render("error", {
       error: { status: 404 },
-      message: "User Notfound",
+      message: "해당하는 사용자를 찾을 수 없습니다.",
       nickname,
       accLevel,
     });
@@ -31,7 +32,7 @@ const userDetail = async (req, res) => {
     const creator_id = creator._id;
     const userLevel = creator.accessLevel;
     const userEmail = creator.email;
-    const contribution_count = await ContModel.count({ creator_id });
+    const contribution_count = await ContModel.countDocuments({ creator_id });
 
     res.render("user/detail", {
       creator_id,
