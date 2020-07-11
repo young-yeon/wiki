@@ -27,6 +27,7 @@ async function search(req, res) {
     var username = title.slice(6).trim();
     return res.redirect("/user/" + username);
   }
+  if (title == "!command") return res.redirect("/w/!명령어");
 
   const nickname = req.session.nickname;
   const accLevel = req.session.accessLevel || -1;
@@ -86,6 +87,7 @@ const list = (req, res) => {
 const deleteWiki = (req, res) => {
   const title = req.params.title;
   WikiModel.findOne({ title }, async (err, result) => {
+    if (err) return res.status(500).end();
     if (req.session.accessLevel < result.level)
       return res.status(403).send("권한이 없습니다.");
     else {
