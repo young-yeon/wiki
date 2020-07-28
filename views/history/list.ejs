@@ -120,7 +120,7 @@
                   3)+"***" %>)</a
                 >
               </td>
-              <td><%= elem.created %></td>
+              <td><%= moment(elem.created).format('YYYY-MM-DD hh:mm') %></td>
               <td><%= elem.level %></td>
               <% if (accLevel >= 2) { %>
               <td>

@@ -3,6 +3,7 @@ const WikiModel = require("../../models/wiki");
 const ContModel = require("../../models/contribution");
 const UserModel = require("../../models/user");
 const mongoose = require("mongoose");
+const moment = require("moment");
 var marked = require("marked");
 
 function historyPage(req, res) {
@@ -25,6 +26,7 @@ function historyPage(req, res) {
           nickname,
           accLevel,
           wikiList,
+          moment,
           page,
         });
     });
@@ -85,6 +87,7 @@ const searchHistory = (req, res) => {
               docLevel,
               result,
               user,
+              moment,
             });
           }
         }
@@ -202,6 +205,7 @@ const docHistory = async (req, res) => {
               nickname,
               accLevel,
               wikiList,
+              moment,
               page,
             });
         });
@@ -246,6 +250,7 @@ const userHistory = async (req, res) => {
               nickname,
               accLevel,
               wikiList,
+              moment,
               page,
             });
         });

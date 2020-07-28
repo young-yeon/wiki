@@ -4,6 +4,7 @@ const UserModel = require("../../models/user");
 const querystring = require("querystring");
 const xss = require("xss");
 const marked = require("marked");
+const moment = require("moment");
 
 const redirect = (req, res, next) => {
   var query = req.query.q;
@@ -56,6 +57,7 @@ async function search(req, res) {
           accLevel,
           docLevel: result.level,
           creator,
+          moment,
         });
       });
     }).sort({ _id: -1 });
@@ -77,6 +79,7 @@ const list = (req, res) => {
         accLevel,
         wikiList,
         page,
+        moment,
       });
   })
     .sort({ created: -1 })

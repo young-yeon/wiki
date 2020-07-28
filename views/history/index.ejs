@@ -27,7 +27,7 @@
           <!-- Grid column -->
           <div class="col-xl-7 pb-2">
             <p class="card-text">
-              작성일 : <%= result.created %>
+              작성일 : <%= moment(result.created).format('YYYY-MM-DD hh:mm') %>
             </p>
 
             <p class="card-text">
