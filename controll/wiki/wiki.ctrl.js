@@ -1,6 +1,7 @@
 const WikiModel = require("../../models/wiki");
 const ContModel = require("../../models/contribution");
 const UserModel = require("../../models/user");
+const DocLevModel = require("../../models/doclevel");
 const querystring = require("querystring");
 const xss = require("xss");
 const marked = require("marked");
@@ -33,7 +34,7 @@ async function search(req, res) {
   const nickname = req.session.nickname;
   const accLevel = req.session.accessLevel || -1;
 
-  WikiModel.findOne({ title: title }, (err, result) => {
+  WikiModel.findOne({ title: title }, async (err, result) => {
     if (err) return res.status(500).end();
     if (!result)
       return res.render("wiki/empty", {
@@ -46,8 +47,14 @@ async function search(req, res) {
     const data = marked(xss(result.data));
     const created = result.created;
 
+    const applyLevelUp = await DocLevModel.exists({
+      applicant: req.session._id,
+      wiki_id: result._id,
+    });
+
     ContModel.find({ wiki_id: result._id }, (err, cont) => {
       UserModel.findById(cont[0].creator_id, (error, creator) => {
+        if (err || error) return res.status(500).end();
         res.render("wiki/index", {
           title,
           subtitle,
@@ -58,6 +65,7 @@ async function search(req, res) {
           docLevel: result.level,
           creator,
           moment,
+          applyLevelUp,
         });
       });
     }).sort({ _id: -1 });
@@ -104,4 +112,26 @@ const deleteWiki = (req, res) => {
   });
 };
 
-module.exports = { redirect, search, list, deleteWiki };
+const applyDocLevUp = async (req, res) => {
+  const title = req.params.title;
+
+  if (!req.session._id) return res.status(403).send("먼저 로그인을 해주세요.");
+
+  const user = await UserModel.findById(req.session._id);
+  const wiki = await WikiModel.findOne({ title });
+
+  if (!user || !wiki)
+    return res.status(404).send("사용자 또는 문서를 찾지 못했습니다.");
+  DocLevModel.create(
+    {
+      applicant: user._id,
+      wiki_id: wiki._id,
+    },
+    (err, result) => {
+      if (err || !result) return res.status(500).send("서버 에러입니다.");
+      return res.status(200).end();
+    }
+  );
+};
+
+module.exports = { redirect, search, list, deleteWiki, applyDocLevUp };

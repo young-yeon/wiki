@@ -28,7 +28,7 @@
           <!-- Grid column -->
           <div class="col-xl-7 pb-2">
             <p class="card-text">
-              최종수정일 : <%= moment(created).format('YYYY-MM-DD hh:mm') %> 
+              최종수정일 : <%= moment(created).format('YYYY-MM-DD hh:mm') %>
             </p>
             <p class="card-text">
               작성자 :
@@ -65,6 +65,16 @@
               X
             </button>
           </td>
+          <% } else if (!applyLevelUp && accLevel > 0) { %>
+          <td>
+            <button
+              type="button"
+              class="btn btn-secondary btn-rounded"
+              onclick="levelup('<%= title %>')"
+            >
+              문서레벨 상승 신청
+            </button>
+          </td>
           <% } %>
         </div>
         <!-- Grid row -->
@@ -80,6 +90,25 @@
             url: "/w/" + title,
             success: function (response) {
               alert("삭제되었습니다.");
+              document.location.reload();
+            },
+            error: function (request, status, error) {
+              console.log(request);
+              alert(request.responseText);
+            },
+          });
+        }
+      }
+    </script>
+    <% } else if (!applyLevelUp && accLevel > 0) { %>
+    <script type="text/javascript">
+      function levelup(title) {
+        if (confirm("문서 레벨 상승을 신청하시겠습니까?")) {
+          $.ajax({
+            type: "POST",
+            url: "/w/levelup/" + title,
+            success: function (response) {
+              alert("신청되었습니다.");
               document.location.reload();
             },
             error: function (request, status, error) {
