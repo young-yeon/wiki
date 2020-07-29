@@ -65,7 +65,7 @@
               X
             </button>
           </td>
-          <% } else if (!applyLevelUp && accLevel > 0) { %>
+          <% } else if (!applyLevelUp && accLevel > 0 && docLevel == 1) { %>
           <td>
             <button
               type="button"
@@ -100,13 +100,13 @@
         }
       }
     </script>
-    <% } else if (!applyLevelUp && accLevel > 0) { %>
+    <% } else if (!applyLevelUp && accLevel > 0 && docLevel == 1) { %>
     <script type="text/javascript">
       function levelup(title) {
         if (confirm("문서 레벨 상승을 신청하시겠습니까?")) {
           $.ajax({
             type: "POST",
-            url: "/w/levelup/" + title,
+            url: "/w/!levelup/" + title,
             success: function (response) {
               alert("신청되었습니다.");
               document.location.reload();

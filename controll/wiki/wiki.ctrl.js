@@ -22,7 +22,7 @@ const redirect = (req, res, next) => {
   }
 };
 
-async function search(req, res) {
+const search = async (req, res) => {
   const title = req.params.title;
   if (title == "!history") return await res.redirect("/history");
   if (title.indexOf("!user:") == 0) {
@@ -70,7 +70,7 @@ async function search(req, res) {
       });
     }).sort({ _id: -1 });
   });
-}
+};
 
 const list = (req, res) => {
   const nickname = req.session.nickname;
@@ -122,16 +122,84 @@ const applyDocLevUp = async (req, res) => {
 
   if (!user || !wiki)
     return res.status(404).send("사용자 또는 문서를 찾지 못했습니다.");
-  DocLevModel.create(
-    {
-      applicant: user._id,
-      wiki_id: wiki._id,
-    },
-    (err, result) => {
-      if (err || !result) return res.status(500).send("서버 에러입니다.");
-      return res.status(200).end();
-    }
-  );
+  else {
+    if (wiki.level != 1)
+      return res
+        .status(403)
+        .send("2레벨 이상의 문서는 관리자에게 직접 문의해 주세요.");
+    else
+      DocLevModel.create(
+        {
+          applicant: user._id,
+          wiki_id: wiki._id,
+        },
+        (err, result) => {
+          if (err || !result) return res.status(500).send("서버 에러입니다.");
+          return res.status(200).end();
+        }
+      );
+  }
 };
 
-module.exports = { redirect, search, list, deleteWiki, applyDocLevUp };
+const searchApplyLevUp = (req, res) => {
+  const nickname = req.session.nickname;
+  const accLevel = req.session.accessLevel || -1;
+  const page = req.query.page || 1;
+
+  DocLevModel.find({}, async (err, result) => {
+    const docs = result.map(async (elem) => {
+      const wiki = await WikiModel.findById(elem.wiki_id);
+      const user = await UserModel.findById(elem.applicant);
+      return { doc_id: elem._id, wiki, user, created: elem.created };
+    });
+    Promise.all(docs).then((doc) => {
+      if (err) return res.status(500).end();
+      else
+        return res.render("wiki/docLevUp", {
+          title: "문서 레벨 상승 신청 목록",
+          subtitle: "2레벨 문서의 레벨 상승은 관리자에게 문의해 주세요.",
+          nickname,
+          accLevel,
+          doc,
+          page,
+          moment,
+        });
+    });
+  })
+    .sort({ created: -1 })
+    .skip((page - 1) * 10)
+    .limit(10);
+};
+
+const docLevUp = async (req, res) => {
+  const wiki_id = req.params.wiki_id;
+  if (req.session.accessLevel < 2)
+    return res.status(403).send("권한이 없습니다.");
+  else if (!(await DocLevModel.exists({ wiki_id }))) {
+    return res.status(404).send("신청 목록에 없습니다.");
+  } else {
+    WikiModel.findOneAndUpdate(
+      { _id: wiki_id },
+      { level: 2 },
+      async (err, result) => {
+        if (err) return res.status(500).send("서버 에러입니다.");
+        if (!result)
+          return res.status(404).send("해당 문서를 찾을 수 없습니다.");
+        else {
+          await DocLevModel.deleteMany({ wiki_id: result._id });
+          return res.status(200).end();
+        }
+      }
+    );
+  }
+};
+
+module.exports = {
+  redirect,
+  search,
+  list,
+  deleteWiki,
+  applyDocLevUp,
+  searchApplyLevUp,
+  docLevUp,
+};

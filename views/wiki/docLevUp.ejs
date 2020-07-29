@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <%- include("../default/header"); %>
+  <style>
+    .number-input input[type="number"] {
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .number-input input[type="number"]::-webkit-inner-spin-button,
+    .number-input input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+
+    .number-input {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .number-input button {
+      -webkit-appearance: none;
+      background-color: transparent;
+      border: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin: 0;
+      position: relative;
+    }
+
+    .number-input button:before,
+    .number-input button:after {
+      display: inline-block;
+      position: absolute;
+      content: "";
+      height: 2px;
+      transform: translate(-50%, -50%);
+    }
+
+    .number-input button.plus:after {
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    .number-input input[type="number"] {
+      text-align: center;
+    }
+
+    .number-input.number-input {
+      border: 1px solid #ced4da;
+      width: 10rem;
+      border-radius: 0.25rem;
+    }
+
+    .number-input.number-input button {
+      width: 2.6rem;
+      height: 0.7rem;
+    }
+
+    .number-input.number-input button.minus {
+      padding-left: 10px;
+    }
+
+    .number-input.number-input button:before,
+    .number-input.number-input button:after {
+      width: 0.7rem;
+      background-color: #495057;
+    }
+
+    .number-input.number-input input[type="number"] {
+      max-width: 4rem;
+      padding: 0.5rem;
+      border: 1px solid #ced4da;
+      border-width: 0 1px;
+      font-size: 1rem;
+      height: 2rem;
+      color: #495057;
+    }
+
+    @media not all and (min-resolution: 0.001dpcm) {
+      @supports (-webkit-appearance: none) and (stroke-color: transparent) {
+        .number-input.def-number-input.safari_only button:before,
+        .number-input.def-number-input.safari_only button:after {
+          margin-top: -0.3rem;
+        }
+      }
+    }
+  </style>
+  <body>
+    <label id="_title" style="display: none;"><%= title %></label>
+    <%- include("../default/nav"); %>
+    <div class="jumbotron">
+      <!-- Jumbotron -->
+      <div class="jumbotron">
+        <!-- Title -->
+        <div class="text-center">
+          <h2 class="card-title h2"><%= title %></h2>
+          <p class="blue-text my-4 font-weight-bold"><%= subtitle %></p>
+        </div>
+        <table id="tablePreview" class="table">
+          <thead>
+            <tr>
+              <th>제목</th>
+              <th>작성자</th>
+              <th>최종편집일</th>
+              <% if (accLevel < 2) { %>
+              <th>문서레벨</th>
+              <% } else { %>
+              <th>레벨업</th>
+              <th>신청삭제</th>
+              <% } %>
+            </tr>
+          </thead>
+          <tbody>
+            <% doc.forEach( elem => { %>
+            <tr>
+              <th scope="row">
+                <a href="/w/<%= elem.wiki.title %>"><%= elem.wiki.title %> </a>
+              </th>
+              <td>
+                <a href="/user/<%= elem.user.nickname %>"
+                  ><%= elem.user.nickname %></a
+                >
+              </td>
+              <td><%= moment(elem.created).format('YYYY-MM-DD hh:mm') %></td>
+              <% if (accLevel < 2) { %>
+              <td><%= elem.wiki.level %></td>
+              <% } else { %>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-primary btn-rounded"
+                  onclick="levelup('<%= elem.wiki._id %>')"
+                >
+                  +
+                </button>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-rounded"
+                  onclick="del('<%= elem.wiki.title %>')"
+                >
+                  X
+                </button>
+              </td>
+              <% } %>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+      <!-- Jumbotron -->
+      <div class="def-number-input number-input safari_only">
+        <button onclick="minus(this)" class="minus"></button>
+        <input
+          class="quantity"
+          min="1"
+          name="quantity"
+          value="<%= page %>"
+          type="number"
+          readonly
+        />
+        <button onclick="plus(this)" class="plus"></button>
+      </div>
+    </div>
+    <%- include("../default/footer"); %>
+    <script type="text/javascript">
+      function minus(node) {
+        node.parentNode.querySelector("input[type=number]").stepDown();
+        location.href =
+          "/w/!levelup?page=" +
+          node.parentNode.querySelector("input[type=number]").value;
+      }
+
+      function plus(node) {
+        node.parentNode.querySelector("input[type=number]").stepUp();
+        location.href =
+          "/w/!levelup?page=" +
+          node.parentNode.querySelector("input[type=number]").value;
+      }
+    </script>
+    <% if (accLevel >= 2) { %>
+    <script type="text/javascript">
+      function levelup(wiki_id) {
+        if (confirm("문서레벨 상승신청을 수락하겠습니까?")) {
+          $.ajax({
+            type: "put",
+            url: "/w/!levelup/" + wiki_id,
+            success: function (response) {
+              alert("문서 레벨이 상승되었습니다.");
+              document.location.reload();
+            },
+            error: function (request, status, error) {
+              console.log(request);
+              alert(request.responseText);
+            },
+          });
+        }
+      }
+
+      function del(title) {
+        if (confirm("정말 삭제하시겠습니까?")) {
+          $.ajax({
+            type: "DELETE",
+            url: "/w/!levelup/" + title,
+            success: function (response) {
+              alert("삭제되었습니다.");
+              document.location.reload();
+            },
+            error: function (request, status, error) {
+              console.log(request);
+              alert(request.responseText);
+            },
+          });
+        }
+      }
+    </script>
+    <% } %>
+  </body>
+</html>
