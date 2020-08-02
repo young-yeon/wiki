@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <%- include("../default/header"); %>
+  <style>
+    .number-input input[type="number"] {
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .number-input input[type="number"]::-webkit-inner-spin-button,
+    .number-input input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+
+    .number-input {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .number-input button {
+      -webkit-appearance: none;
+      background-color: transparent;
+      border: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin: 0;
+      position: relative;
+    }
+
+    .number-input button:before,
+    .number-input button:after {
+      display: inline-block;
+      position: absolute;
+      content: "";
+      height: 2px;
+      transform: translate(-50%, -50%);
+    }
+
+    .number-input button.plus:after {
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    .number-input input[type="number"] {
+      text-align: center;
+    }
+
+    .number-input.number-input {
+      border: 1px solid #ced4da;
+      width: 10rem;
+      border-radius: 0.25rem;
+    }
+
+    .number-input.number-input button {
+      width: 2.6rem;
+      height: 0.7rem;
+    }
+
+    .number-input.number-input button.minus {
+      padding-left: 10px;
+    }
+
+    .number-input.number-input button:before,
+    .number-input.number-input button:after {
+      width: 0.7rem;
+      background-color: #495057;
+    }
+
+    .number-input.number-input input[type="number"] {
+      max-width: 4rem;
+      padding: 0.5rem;
+      border: 1px solid #ced4da;
+      border-width: 0 1px;
+      font-size: 1rem;
+      height: 2rem;
+      color: #495057;
+    }
+
+    @media not all and (min-resolution: 0.001dpcm) {
+      @supports (-webkit-appearance: none) and (stroke-color: transparent) {
+        .number-input.def-number-input.safari_only button:before,
+        .number-input.def-number-input.safari_only button:after {
+          margin-top: -0.3rem;
+        }
+      }
+    }
+  </style>
+  <body>
+    <%- include("../default/nav"); %>
+    <div class="jumbotron">
+      <!-- Jumbotron -->
+      <div class="jumbotron">
+        <!-- Title -->
+        <div class="text-center">
+          <h2 class="card-title h2">이미지 리스트</h2>
+          <p class="blue-text my-4 font-weight-bold">
+            이미지를 클릭하면 URL이 복사됩니다.
+          </p>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3">
+          <% if (accLevel > 0) { %>
+          <form id="addFile" action="#" method="POST">
+            <div class="col mb-4">
+              <!-- Card -->
+              <div class="card">
+                <!-- Card image -->
+                <div class="view overlay" style="overflow: hidden;">
+                  <img
+                    class="card-img-top"
+                    style="
+                      width: auto;
+                      height: 300px;
+                      margin-left: auto;
+                      margin-right: auto;
+                    "
+                    src="/images/addOne.png"
+                    alt="이미지가 삭제되거나 이동되었습니다."
+                  />
+                  <a href="#" onclick="addImage()">
+                    <div class="mask rgba-white-slight"></div>
+                  </a>
+                </div>
+                <!-- Card content -->
+                <div class="card-body">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputFileAddon"
+                        >Upload</span
+                      >
+                    </div>
+                    <div class="custom-file">
+                      <input
+                        type="file"
+                        class="custom-file-input"
+                        id="file"
+                        aria-describedby="inputFileAddon"
+                        required
+                      />
+                      <label class="custom-file-label" for="inputGroupFile01"
+                        >Choose file</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Card -->
+            </div>
+          </form>
+
+          <% } %> <% result.forEach(elem => { %>
+          <div class="col mb-4">
+            <!-- Card -->
+            <div class="card">
+              <!-- Card image -->
+              <div class="view overlay" style="overflow: hidden;">
+                <img
+                  class="card-img-top"
+                  style="
+                    width: auto;
+                    height: 300px;
+                    margin-left: auto;
+                    margin-right: auto;
+                  "
+                  src="<%= elem.fileUrl %>"
+                  alt="이미지가 삭제되거나 이동되었습니다."
+                />
+                <a href="#" onclick="copy('<%= elem.fileUrl %>')">
+                  <div class="mask rgba-white-slight"></div>
+                </a>
+              </div>
+
+              <!-- Card content -->
+              <div class="card-body">
+                <!-- Title -->
+                <h4 class="card-title"><%= elem.fileName %></h4>
+                <!-- Text -->
+                <p class="card-text">
+                  <%= elem.fileUrl %>
+                </p>
+              </div>
+            </div>
+            <!-- Card -->
+          </div>
+          <% }) %>
+        </div>
+      </div>
+      <!-- Jumbotron -->
+      <div class="def-number-input number-input safari_only">
+        <button onclick="minus(this)" class="minus"></button>
+        <input
+          class="quantity"
+          min="1"
+          name="quantity"
+          value="<%= page %>"
+          type="number"
+          readonly
+        />
+        <button onclick="plus(this)" class="plus"></button>
+      </div>
+    </div>
+    <%- include("../default/footer"); %>
+    <script type="text/javascript">
+      function minus(node) {
+        node.parentNode.querySelector("input[type=number]").stepDown();
+        location.href =
+          "/w/!list?page=" +
+          node.parentNode.querySelector("input[type=number]").value;
+      }
+
+      function plus(node) {
+        node.parentNode.querySelector("input[type=number]").stepUp();
+        location.href =
+          "/w/!list?page=" +
+          node.parentNode.querySelector("input[type=number]").value;
+      }
+      function copy(val) {
+        var dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = "https://wiki.gorae.ga/uploads/" + val;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+      }
+      function addImage() {
+        if (confirm("파일을 업로드 하시겠습니까?")) {
+          if (!$("#file")[0].files[0]) {
+            alert("먼저 파일을 추가해 주세요")
+            return -1;
+          }
+
+          const formData = new FormData();
+          formData.append("file", $("#file")[0].files[0]);
+
+          $.ajax({
+            type: "POST",
+            url: "/upload",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (response) {
+              alert(response.message);
+              document.location.reload();
+            },
+            error: function (request, status, error) {
+              console.log(request);
+              alert(request.responseText);
+            },
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

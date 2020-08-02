@@ -41,9 +41,9 @@ app.use(
 );
 
 app.use((_, res, next) => {
-  res.setHeader('X-Powered-By', 'Happstack')
-  next()
-})
+  res.setHeader("X-Powered-By", "Happstack");
+  next();
+});
 
 app.use("/", controller);
 

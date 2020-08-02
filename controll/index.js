@@ -7,5 +7,6 @@ router.use("/e", require("./edit"));
 router.use("/auth", require("./auth"));
 router.use("/user", require("./user"));
 router.use("/history", require("./history"));
+router.use("/upload", require("./upload"));
 
 module.exports = router;
