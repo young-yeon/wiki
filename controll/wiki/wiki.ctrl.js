@@ -40,7 +40,7 @@ const search = async (req, res) => {
       if (err) return res.status(500).end();
       if (!result)
         return res.render("wiki/empty", {
-          title,
+          title: result.title,
           nickname,
           accLevel,
           docLevel: 1,
