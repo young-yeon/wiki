@@ -227,7 +227,7 @@
       function addImage() {
         if (confirm("파일을 업로드 하시겠습니까?")) {
           if (!$("#file")[0].files[0]) {
-            alert("먼저 파일을 추가해 주세요")
+            alert("먼저 파일을 추가해 주세요");
             return -1;
           }
 
@@ -245,8 +245,8 @@
               document.location.reload();
             },
             error: function (request, status, error) {
-              console.log(request.message);
-              alert(request.responseText);
+              console.log(request);
+              alert(request.responseJSON.message);
             },
           });
         }
