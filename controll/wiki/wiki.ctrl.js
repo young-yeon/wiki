@@ -40,7 +40,7 @@ const search = async (req, res) => {
       if (err) return res.status(500).end();
       if (!result)
         return res.render("wiki/empty", {
-          title: result.title,
+          title,
           nickname,
           accLevel,
           docLevel: 1,
@@ -58,7 +58,7 @@ const search = async (req, res) => {
         UserModel.findById(cont[0].creator_id, (error, creator) => {
           if (err || error) return res.status(500).end();
           res.render("wiki/index", {
-            title,
+            title: result.title,
             subtitle,
             data,
             created,
