@@ -245,7 +245,7 @@
               document.location.reload();
             },
             error: function (request, status, error) {
-              console.log(request);
+              console.log(request.message);
               alert(request.responseText);
             },
           });
