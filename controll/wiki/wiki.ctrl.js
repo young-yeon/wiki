@@ -34,42 +34,45 @@ const search = async (req, res) => {
   const nickname = req.session.nickname;
   const accLevel = req.session.accessLevel || -1;
 
-  WikiModel.findOne({ title: title }, async (err, result) => {
-    if (err) return res.status(500).end();
-    if (!result)
-      return res.render("wiki/empty", {
-        title,
-        nickname,
-        accLevel,
-        docLevel: 1,
-      });
-    const subtitle = result.subtitle;
-    const data = marked(xss(result.data));
-    const created = result.created;
-
-    const applyLevelUp = await DocLevModel.exists({
-      applicant: req.session._id,
-      wiki_id: result._id,
-    });
-
-    ContModel.find({ wiki_id: result._id }, (err, cont) => {
-      UserModel.findById(cont[0].creator_id, (error, creator) => {
-        if (err || error) return res.status(500).end();
-        res.render("wiki/index", {
+  WikiModel.findOne(
+    { title: { $regex: RegExp(title) } },
+    async (err, result) => {
+      if (err) return res.status(500).end();
+      if (!result)
+        return res.render("wiki/empty", {
           title,
-          subtitle,
-          data,
-          created,
           nickname,
           accLevel,
-          docLevel: result.level,
-          creator,
-          moment,
-          applyLevelUp,
+          docLevel: 1,
         });
+      const subtitle = result.subtitle;
+      const data = marked(xss(result.data));
+      const created = result.created;
+
+      const applyLevelUp = await DocLevModel.exists({
+        applicant: req.session._id,
+        wiki_id: result._id,
       });
-    }).sort({ _id: -1 });
-  });
+
+      ContModel.find({ wiki_id: result._id }, (err, cont) => {
+        UserModel.findById(cont[0].creator_id, (error, creator) => {
+          if (err || error) return res.status(500).end();
+          res.render("wiki/index", {
+            title,
+            subtitle,
+            data,
+            created,
+            nickname,
+            accLevel,
+            docLevel: result.level,
+            creator,
+            moment,
+            applyLevelUp,
+          });
+        });
+      }).sort({ _id: -1 });
+    }
+  );
 };
 
 const list = (req, res) => {
