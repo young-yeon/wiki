@@ -93,13 +93,38 @@
       <!-- Jumbotron -->
       <div class="jumbotron">
         <!-- Title -->
-        <div class="text-center">
-          <h2 class="card-title h2">이미지 리스트</h2>
-          <p class="blue-text my-4 font-weight-bold">
-            이미지를 클릭하면 URL이 복사됩니다.
-          </p>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+              <div class="text-center">
+                <h2 class="card-title h2">이미지 리스트</h2>
+                <p class="blue-text my-4 font-weight-bold">
+                  이미지를 클릭하면 URL이 복사됩니다.
+                </p>
+              </div>
+            </div>
+            <div class="col-sm">
+              <form class="form-inline my-2 my-lg-0 mr-auto" method="GET">
+                <input
+                  style="width: 60%;"
+                  class="form-control mr-sm-2"
+                  type="text"
+                  name="q"
+                  placeholder="Search"
+                  aria-label="Search"
+                />
+                <button
+                  style="width: 30%;"
+                  class="btn btn-outline-primary btn-sm my-0"
+                  type="submit"
+                >
+                  검색
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
-
         <div class="row row-cols-1 row-cols-md-3">
           <% if (accLevel > 0) { %>
           <form id="addFile" action="#" method="POST">

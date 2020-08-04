@@ -78,17 +78,30 @@ const uploadPage = (req, res) => {
   const nickname = req.session.nickname;
   const accLevel = req.session.accessLevel || -1;
   const page = req.query.page || 1;
+  const query = req.query.q;
 
-  fileList.find({}, (err, result) => {
-    if (err) return res.status(500).end();
-    return res.render("upload/index", {
-      nickname,
-      accLevel,
-      page,
-      moment,
-      result,
+  if (!query)
+    fileList.find({}, (err, result) => {
+      if (err) return res.status(500).end();
+      return res.render("upload/index", {
+        nickname,
+        accLevel,
+        page,
+        moment,
+        result,
+      });
     });
-  });
+  else
+    fileList.find({ fileName: { $regex: RegExp(query) } }, (err, result) => {
+      if (err) return res.status(500).end();
+      return res.render("upload/index", {
+        nickname,
+        accLevel,
+        page,
+        moment,
+        result,
+      });
+    });
 };
 
 module.exports = { fileUpload, uploadPage };
